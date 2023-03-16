@@ -1,105 +1,101 @@
-// import React, {useState} from 'react'
-// import wilayah from 'wilayah-indonesia';
+import React, {useState, useEffect} from 'react'
+// import { useState } from 'react';
+
+const Contohwilayah = () => {
+  const [selectedOption1, setSelectedOption1] = useState('');
+  const [selectedOption2, setSelectedOption2] = useState('');
+
+  // bikin state untuk menyimpan data
+  const [pekerjaan, setPekerjaan] = useState([]);
+  const [selectedPekerjaan, setSelectedPekerjaan] = useState('');
+
+  // fetch data menggunakan useEffect
+    useEffect(() => {
+    fetch('http://localhost:5000/pekerjaan')
+      .then(response => response.json())
+      .then(data => setPekerjaan(data))
+  }, []);
+
+  // handle setiap ada perubahan value
+    const handleChange = (event) => {
+    setSelectedPekerjaan(event.target.value);
+  };
+
+  const options = {
+  Aceh: [
+    { value: 'option1-1', label: 'Kab Aceh Besar' },
+    { value: 'option1-2', label: 'Kab Pidie' },
+    { value: 'option1-3', label: 'Kab Meulaboh' }
+  ],
+  Bali: [
+    { value: 'option2-1', label: 'Option 2 - 1' },
+    { value: 'option2-2', label: 'Option 2 - 2' },
+    { value: 'option2-3', label: 'Option 2 - 3' }
+  ],
+  Kecamatan: [
+    { value: 'option3-1', label: 'Option 3 - 1' },
+    { value: 'option3-2', label: 'Option 3 - 2' },
+    { value: 'option3-3', label: 'Option 3 - 3' }
+  ]
+};
+
+function handleOption1Change(selectedOption1) {
+  setSelectedOption1(selectedOption1);
+  setSelectedOption2('');
+}
+
+function handleOption2Change(selectedOption2) {
+  setSelectedOption2(selectedOption2);
+}
+
+  
+  return (
+    <>
+<select value={selectedOption1} onChange={(e) => handleOption1Change(e.target.value)}>
+  <option value="">Select Option 1</option>
+  {Object.keys(options).map((key) => (
+    <option key={key} value={key}>
+      {key}
+    </option>
+  ))}
+</select>
+<br/>
+<br/>
+<br/>
+<select
+  value={selectedOption2}
+  onChange={(e) => handleOption2Change(e.target.value)}
+  disabled={!selectedOption1}
+>
+  <option value="">Select Option 2</option>
+  {options[selectedOption1] &&
+    options[selectedOption1].map((option) => (
+      <option key={option.value} value={option.value}>
+        {option.label}
+      </option>
+    ))}
+</select>
+
+<br/>
+<br/>
+<br/>
+
+ <h1>Dropdown Example</h1>
+      <select value={selectedPekerjaan} onChange={handleChange}>
+        <option value="">Select an option</option>
+        {pekerjaan.map(option => (
+          <option key={option.id} value={option.id}>{option.nama_pekerjaan}</option>
+        ))}
+      </select>
+      <p>You have selected: {selectedPekerjaan}</p>
 
 
+<br/>
+<br/>
+<br/>
 
+    </>
+  )
+}
 
-// const contohwilayah = () => {
-
-
-
-//   const [selectedProvince, setSelectedProvince] = useState('');
-//   const [selectedRegency, setSelectedRegency] = useState('');
-//   const [selectedDistrict, setSelectedDistrict] = useState('');
-//   const [selectedVillage, setSelectedVillage] = useState('');
-
-//   const handleProvinceSelect = (e) => {
-//     setSelectedProvince(e.target.value);
-//     setSelectedRegency('');
-//     setSelectedDistrict('');
-//     setSelectedVillage('');
-//   };
-
-//   const handleRegencySelect = (e) => {
-//     setSelectedRegency(e.target.value);
-//     setSelectedDistrict('');
-//     setSelectedVillage('');
-//   };
-
-//   const handleDistrictSelect = (e) => {
-//     setSelectedDistrict(e.target.value);
-//     setSelectedVillage('');
-//   };
-
-//   const handleVillageSelect = (e) => {
-//     setSelectedVillage(e.target.value);
-//   };
-
-//   return (
-//     <div>
-         
-//        <h1>Indonesia Region Dropdown</h1>
-
-//       <label htmlFor="province">Provinsi:</label>
-//       <select id="province" value={selectedProvince} onChange={handleProvinceSelect}>
-//         <option value="">Pilih provinsi</option>
-//         {wilayah.provinsi.map((province) => (
-//           <option key={province.id} value={province.nama}>
-//             {province.nama}
-//           </option>
-//         ))}
-//       </select>
-
-//       {selectedProvince && (
-//         <>
-//           <br />
-
-//           <label htmlFor="regency">Kabupaten/Kota:</label>
-//           <select id="regency" value={selectedRegency} onChange={handleRegencySelect}>
-//             <option value="">Pilih kabupaten/kota</option>
-//             {wilayah.kabupaten(selectedProvince).map((regency) => (
-//               <option key={regency.id} value={regency.nama}>
-//                 {regency.nama}
-//               </option>
-//             ))}
-//           </select>
-//         </>
-//       )}
-
-//       {selectedRegency && (
-//         <>
-//           <br />
-
-//           <label htmlFor="district">Kecamatan:</label>
-//           <select id="district" value={selectedDistrict} onChange={handleDistrictSelect}>
-//             <option value="">Pilih kecamatan</option>
-//             {wilayah.kecamatan(selectedRegency).map((district) => (
-//               <option key={district.id} value={district.nama}>
-//                 {district.nama}
-//               </option>
-//             ))}
-//           </select>
-//         </>
-//       )}
-
-//       {selectedDistrict && (
-//         <>
-//           <br />
-
-//           <label htmlFor="village">Kelurahan/Desa:</label>
-//           <select id="village" value={selectedVillage} onChange={handleVillageSelect}>
-//             <option value="">Pilih kelurahan/desa</option>
-//             {wilayah.kelurahan(selectedDistrict).map((village) => (
-//               <option key={village.id} value={village.nama}>
-//                 {village.nama}
-//               </option>
-//             ))}
-//           </select>
-//         </>
-//       )}
-    
-//     </div>
-//   )
-// }
-
-// export default contohwilayah
+export default Contohwilayah

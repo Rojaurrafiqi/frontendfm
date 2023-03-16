@@ -9,11 +9,11 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
 
   return (
     <nav>
-      <ul className="pagination">
+      <ul classNameName="pagination">
         {pageNumbers.map((number) => (
-          <li key={number} className="page-item">
+          <li key={number} classNameName="page-item">
             <button
-              className={`page-link ${number === currentPage ? 'active' : ''}`}
+              classNameName={`page-link ${number === currentPage ? 'active' : ''}`}
               onClick={() => onPageChange(number)}
             >
               {number}
