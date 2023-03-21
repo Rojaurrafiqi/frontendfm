@@ -5,6 +5,7 @@ module.exports = {
     extend: {
       colors: {
         emerald: '#0B9984',
+        emerald300: '#D3F1DA',
         dasar:'#F9FAFB',
       },
       fontFamily: {
