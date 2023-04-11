@@ -475,20 +475,9 @@ const handleAlamatPjChange = (e) => {
 
   const handlePjDetailChange = (e) => {
     setPjDetail(e.target.value);
+    
   }
   
-//   const handleEditProvinsiChange = (e) => {
-//     setSelectedEditProvinsi(e.target.value);
-
-//   }
-  
-//   const handleEditKabupatenKotaChange = (e) => {
-
-//   const provinsiId = e.target.value;
-//     setEditKabupatenKota(e.target.value);
-//   }
-
-
   // end of punya alamat pj
 
     // edit data
@@ -507,8 +496,6 @@ const handleAlamatPjChange = (e) => {
         
     };
 
-    // console.log(editkabupatenkota);
-    // console.log(typeof editkabupatenkota)
 
     // mengirim request ke API untuk mengedit data
     const handleEditSubmit = async (event) => {

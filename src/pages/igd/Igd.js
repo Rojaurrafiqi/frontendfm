@@ -119,7 +119,7 @@ const Igd = () => {
 
   </div>
   
-  <div class="flex-auto   bg-dasar border-l-2 border-opacity-30 border-gray-300 shadow-md">
+  <div class="flex-auto h-screen  bg-dasar border-l-2 border-opacity-30 border-gray-300 shadow-md">
 
  {/* <!-- navbar --> */}
     <nav class="bg-white  border-b-2 ">
@@ -180,7 +180,7 @@ const Igd = () => {
 
     {/* <!-- navbar --> */}
 
-<div class="container mx-auto px-8 pb-10">
+<div class="container mx-auto  px-8 pb-10">
 
 <Pendaftaran />
 

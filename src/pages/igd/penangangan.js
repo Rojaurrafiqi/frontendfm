@@ -2,12 +2,18 @@ import React, {useState, useEffect} from 'react'
 import { Link, useNavigate , useParams} from "react-router-dom";
 import axios from "axios";
 import filemedisLogo from '../../images/logo-filemedis.png';
-import Triase from './triase';
+import Triase from './triase/triase';
 import AsasmenAwal from './asasmenawal';
 
 
-const Penangangan = (props) => {
 
+const Penangangan = (props) => {
+  // mengambil link sebelumnya
+  const navigate = useNavigate();
+  const handleBack = () => {
+    navigate(-1);
+  };
+  
   // const navigate = useNavigate();
   const {id} = useParams();
   const [pasienigdbyid, setPasienIgdById] = useState({});
@@ -230,7 +236,7 @@ const Penangangan = (props) => {
 
 <div class="container mx-auto px-8 py-auto">
   <div className='flex justify-between my-3'>
-   <button className='py-0.2 px-1 mr-1 bg-emerald text-white  hover:opacity-75' type='button'>KEMBALI</button>
+   <button className='py-0.2 px-1 mr-1 bg-emerald text-white  hover:opacity-75' type='button' onClick={handleBack}>KEMBALI</button>
    <button className='py-0.2 px-1 mr-1 bg-emerald text-white  hover:opacity-75' type='button'>CHACKOUT</button>
   </div>
   <div className="container border border-state-300  bg-white p-5">

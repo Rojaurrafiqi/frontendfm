@@ -2,10 +2,13 @@ import React, {useState, useEffect} from 'react'
 import axios from "axios";
 import { Link } from "react-router-dom";
 import Modal from '../../component/Modal';
+import closeIcon from '../../images/close.png';
 
 const Pendaftaran = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResult, setSearchResult] = useState([]);
+  const [tampilanSearch, setTampilanSearch] = useState(false);
+
   
   const [datapasien, setDataPasien] = useState([]);
   const [formData, setFormData] = useState({});
@@ -16,6 +19,7 @@ const Pendaftaran = () => {
   const [deleteUserId, setDeleteUserId] = useState(null);
 
   const [allpasienigd, setAllPasienIgd] = useState();
+  const [listPasienIgdPenanganan, setListPasienIgdPenanganan] = useState();
 
 
 
@@ -25,6 +29,12 @@ const Pendaftaran = () => {
     axios.get('http://localhost:5000/igd/pasien/all')
       .then(response => setAllPasienIgd(response.data));
   }, [allpasienigd]);
+
+  useEffect(() => {
+    axios.get('http://localhost:5000/igd/pasien/list/penanganan')
+      .then(response => setListPasienIgdPenanganan(response.data));
+  }, [listPasienIgdPenanganan]);
+
 
  
 
@@ -37,6 +47,7 @@ const Pendaftaran = () => {
     event.preventDefault();
     setSearchResult([]);
     setSearchQuery('');
+    setTampilanSearch(true);
     fetch(`http://localhost:5000/igd/pasien/search/${id}`)
       .then((response) => response.json())
       .then((datak) => {
@@ -70,7 +81,7 @@ const Pendaftaran = () => {
   };
    try {
      const response = await axios.post('http://localhost:5000/igd/pasien/register', dataToSend);
-     
+      setTampilanSearch(false);
     
    } catch (error) {
     console.error(error);
@@ -133,7 +144,9 @@ const Pendaftaran = () => {
     }
   }, [searchQuery]);
   
-
+const handleCloseTampilan = () => {
+  setTampilanSearch(false);
+};
 
 
   
@@ -141,7 +154,7 @@ const Pendaftaran = () => {
   return (
     <>
     
-     <div className="container border border-state-300 bg-white p-5 mt-5 mb-4 ">
+<div className="container border border-state-300 bg-white p-5 mt-5 mb-4 ">
     <div className='search text-left flex'>
         <form onSubmit={handleSubmit}>
             <input className='border border-black pl-0.5 py-0.4  ' type="text" value={searchQuery} onChange={handleInputChange} placeholder="Search..." autoFocus/>
@@ -168,8 +181,14 @@ const Pendaftaran = () => {
       </ul>
    
    
-   
- <div className="flex mt-5">
+{tampilanSearch &&    
+<div className='container mx-auto'>
+  <div className='flex mt-1 mb-1'>
+    <div className='ml-auto'>
+      <a href='#' onClick={handleCloseTampilan}><img src={closeIcon} width="20px"/></a>
+    </div>
+  </div>
+ <div className="flex">
     <div className='container border border-state-300 w-2/3 mr-5 p-2'>
       {datapasien.map((pasien) => (
         <div className='text-left' key={pasien.id}>
@@ -183,34 +202,50 @@ const Pendaftaran = () => {
     </div>
     <div className='container border border-state-300 w-2/3'>
       <form onSubmit={handleRegisterPasien}>
-        <div className='flex p-1'>
-          <label className='ml-1'>Tanggal masuk</label>
-          {/* <input type="text" name='id_pasien_rm' value={simpanid} onChange={handleFormChange} className='border border-black ml-1 pl-0.5 py-0.4'/> */}
-          <input type="text" name='tgl_masuk' onChange={handleFormChange} className='border border-black ml-1 pl-0.5 py-0.4'/>
+        {/* <input type="text" name='id_pasien_rm' value={simpanid} onChange={handleFormChange} className='border border-black ml-1 pl-0.5 py-0.4'/> */}
+        <div className='container text-left ml-2 mt-4 mr-0'>
+
+        <tr>        
+            <td className='pr-1 ml-1'>Tanggal Masuk</td>
+            <td className='pb-1'>
+               <input type="text" name='tgl_masuk' onChange={handleFormChange} className='border border-black ml-1 mx-32 pr-0.5 pl-0.5 py-0.4 w-full'/>
+            </td>             
+        </tr>        
+        <tr>
+            <td className='pr-1'>Jam Masuk</td>
+            <td className='pb-1'>
+              <input type="text" name='jam_masuk' onChange={handleFormChange} className='border border-black ml-1 mx-28  pl-0.5 py-0.4 w-full'/>
+            </td>             
+        </tr>        
+        <tr>
+            <td className='pr-1'>Cara Masuk</td>
+            <td className='pb-1'>
+               <input type="text" name='cara_masuk' onChange={handleFormChange} className='border border-black mx-28 ml-1 pl-0.5 py-0.4 w-full'/>            
+            </td>             
+        </tr>        
+        <tr>
+            <td className='pr-1'>Pembayaran</td>
+            <td className='pb-1'>
+               <input type="text" name='pembayaran_igd' onChange={handleFormChange} className='border border-black mx-28 ml-1 pl-0.5 py-0.4 w-full'/>
+            </td>             
+        </tr>        
+         
         </div>
-        <div className='flex p-1'>
-          <label className='ml-1'>Jam masuk</label>
-          <input type="text" name='jam_masuk' onChange={handleFormChange} className='border border-black ml-1 pl-0.5 py-0.4'/>
-        </div>
-        <div className='flex p-1'>
-          <label className='ml-1'>Cara masuk</label>
-          <input type="text" name='cara_masuk' onChange={handleFormChange} className='border border-black ml-1 pl-0.5 py-0.4'/>
-        </div>
-        <div className='flex p-1'>
-          <label className='ml-1'>Pembayaran</label>
-          <input type="text" name='pembayaran_igd' onChange={handleFormChange} className='border border-black ml-1 pl-0.5 py-0.4'/>
-        </div>
+        <div className='flex justify-end pb-1 pt-1'>
             <button className="ml-1 mr-2 mb-2 py-0.2 px-1 bg-emerald text-white rounded hover:opacity-75"  >
                 Submit
-           </button>
+           </button>  
+        </div>    
       </form>
     </div>
 </div>
-
+</div>
+}
       
+<div class="overflow-x-auto mb-5">
+<div className='container bg-emerald300 text-left pl-2 mt-3 py-0.5'>Daftar Antrian Pasien IGD</div>
+   <table class="table-auto w-full">
 
-<div class="overflow-x-auto my-5">
-   <table class="table-auto">
    <thead>
   <tr>
     <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No</th>
@@ -219,7 +254,7 @@ const Pendaftaran = () => {
     <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No RM</th>
     <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Pasien</th>
     <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cara Masuk</th>
-    <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"></th>
+    <th class="px-6 py-3 bg-gray-50 text-left text-xs fonst-medium text-gray-500 uppercase tracking-wider"></th>
   </tr>
 </thead>
 <tbody class="bg-white divide-y divide-gray-200">
@@ -241,12 +276,45 @@ const Pendaftaran = () => {
 
 
 </tbody>
+</table>
+</div>
 
-    </table>
+<div class="overflow-x-auto my-5 mt-5">
+  <div className='container bg-emerald300 text-left pl-2 mt-3 py-0.5'>List Pasien dalam Penanganan Pasien IGD</div>
+   <table class="table-auto w-full">
+   <thead>
+  <tr>
+    <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No</th>
+    <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal Masuk</th>
+    <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jam</th>
+    <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No RM</th>
+    <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Pasien</th>
+    <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status Pasien</th>
+    <th class="px-6 py-3 bg-gray-50 text-left text-xs fonst-medium text-gray-500 uppercase tracking-wider"></th>
+  </tr>
+</thead>
+<tbody class="bg-white divide-y divide-gray-200">
+  {listPasienIgdPenanganan && listPasienIgdPenanganan.map((pasien, index) => (
+
+    <tr key={pasien.id}>
+    <td class=" py-0.3 whitespace-nowrap">{index + 1}</td>
+    <td class=" py-0.3 whitespace-nowrap">{pasien.tgl_masuk}</td>
+    <td class=" py-0.3 whitespace-nowrap">{pasien.jam_masuk}</td>
+    <td class=" py-0.3 whitespace-nowrap">{pasien.pasien_rm.no_rm}</td>
+    <td class=" py-0.3 whitespace-nowrap">{pasien.pasien_rm.nama_lengkap}</td>
+    <td class=" py-0.3 whitespace-nowrap"><span className={`font-bold ${pasien.triase_ats_pasien_igd[0].plan === 'Zona Merah' ? ' text-red-600' : pasien.triase_ats_pasien_igd[0].plan === 'Zona Kuning' ? 'text-orange-600' : pasien.triase_ats_pasien_igd[0].plan === 'Zona Hijau' ? 'text-green-600' : ''}`}>{pasien.triase_ats_pasien_igd[0].plan}</span></td>
+    <td class=" py-0.3 whitespace-nowrap">
+      <Link to={`/igd/pasien/tangani/${pasien.id}`}  className='ml-1 py-0.1 my-0.2 px-1 mr-1 bg-emerald text-white  hover:opacity-75' type='button'>Detail</Link>
+    </td>
+  </tr>
+    ))}
 
 
-    </div>
-    </div>
+</tbody>
+</table>
+</div>
+
+</div>
 
 
 {/* modal delete */}
