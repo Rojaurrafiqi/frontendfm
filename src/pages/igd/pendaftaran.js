@@ -1,4 +1,5 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect} from 'react';
+import { API_URL } from '../../config';
 import axios from "axios";
 import { Link } from "react-router-dom";
 import Modal from '../../component/Modal';
@@ -26,12 +27,12 @@ const Pendaftaran = () => {
 
 
   useEffect(() => {
-    axios.get('http://localhost:5000/igd/pasien/all')
+    axios.get(`${API_URL}/igd/pasien/all`)
       .then(response => setAllPasienIgd(response.data));
   }, [allpasienigd]);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/igd/pasien/list/penanganan')
+    axios.get(`${API_URL}/igd/pasien/list/penanganan`)
       .then(response => setListPasienIgdPenanganan(response.data));
   }, [listPasienIgdPenanganan]);
 
@@ -48,7 +49,7 @@ const Pendaftaran = () => {
     setSearchResult([]);
     setSearchQuery('');
     setTampilanSearch(true);
-    fetch(`http://localhost:5000/igd/pasien/search/${id}`)
+    fetch(`${API_URL}/igd/pasien/search/${id}`)
       .then((response) => response.json())
       .then((datak) => {
         setDataPasien([datak]);
@@ -65,7 +66,7 @@ const Pendaftaran = () => {
    const handleSubmit = async (event) => {
         event.preventDefault();
         // mengambil data dari API berdasarkan input pencarian pengguna
-        fetch(`http://localhost:5000/igd/pasien?search=${searchQuery}&page=&limit=10`)
+        fetch(`${API_URL}/igd/pasien?search=${searchQuery}&page=&limit=10`)
       .then((response) => response.json())
       .then((data) => setSearchResult(data.data))
       .catch((error) => console.log(error));
@@ -80,7 +81,7 @@ const Pendaftaran = () => {
     id_pasien_rm: simpanid,
   };
    try {
-     const response = await axios.post('http://localhost:5000/igd/pasien/register', dataToSend);
+     const response = await axios.post(`${API_URL}/igd/pasien/register`, dataToSend);
       setTampilanSearch(false);
     
    } catch (error) {
@@ -106,7 +107,7 @@ const Pendaftaran = () => {
     const handleDeleteUser = async (PasienId) => {
  
     try {
-      await axios.delete(`http://localhost:5000/igd/pasien/${PasienId}`);
+      await axios.delete(`${API_URL}/igd/pasien/${PasienId}`);
       
 
     } catch (error) {
@@ -135,7 +136,7 @@ const Pendaftaran = () => {
      useEffect(() => {
     if (searchQuery !== '') {
     
-      fetch(`http://localhost:5000/igd/pasien?search=${searchQuery}&page=&limit=5`)
+      fetch(`${API_URL}/igd/pasien?search=${searchQuery}&page=&limit=5`)
         .then(response => response.json())
         .then(data => setSearchResult(data.data))
         .catch(error => console.error(error));
@@ -293,7 +294,7 @@ const handleCloseTampilan = () => {
     <th class="px-6 py-3 bg-gray-50 text-left text-xs fonst-medium text-gray-500 uppercase tracking-wider"></th>
   </tr>
 </thead>
-<tbody class="bg-white divide-y divide-gray-200">
+<tbody class="bg-white divide-y px-6 divide-gray-200">
   {listPasienIgdPenanganan && listPasienIgdPenanganan.map((pasien, index) => (
 
     <tr key={pasien.id}>

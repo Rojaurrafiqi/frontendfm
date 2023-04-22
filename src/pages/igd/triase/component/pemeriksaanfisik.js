@@ -1,16 +1,12 @@
-import React, {useState, useEffect, useRef} from 'react'
+import React, {useState, useEffect, useRef} from 'react';
 import {useParams} from "react-router-dom";
 import axios from "axios";
 import editIcon from '../../../../images/edit2.png';
 import humanImages from '../../../../images/human.jpg';
-
+import { API_URL } from '../../../../config';
 
 
 const Pemeriksaanfisik = () => {
-
-
-
-
 
   const {id} = useParams();
   const nilai = Number(id);
@@ -25,7 +21,7 @@ const Pemeriksaanfisik = () => {
   //fetch data tanda vital
   function fetchIgdTriasePemeriksaanFisik(id) {
       axios
-      .get(`http://localhost:5000/igd/pasien/penanganan/triase/pemeriksaanfisik/${id}`)
+      .get(`${API_URL}/igd/pasien/penanganan/triase/pemeriksaanfisik/${id}`)
        .then(response => {
       const data = response.data; 
       setPasienIgdTriasePemeriksaanFisik(data); 
@@ -67,7 +63,7 @@ function handleEditPemeriksaanFisikSubmit (event) {
   const formData = new FormData(event.target);
   const data = Object.fromEntries(formData.entries())
 
-  axios.patch(`http://localhost:5000/igd/pasien/penanganan/triase/pemeriksaanfisik/${idPemeriksaanFisikValue}`, {
+  axios.patch(`${API_URL}/igd/pasien/penanganan/triase/pemeriksaanfisik/${idPemeriksaanFisikValue}`, {
      ...data,
     id_pasien_igd: nilai
 
@@ -80,7 +76,7 @@ function handleEditPemeriksaanFisikSubmit (event) {
     setIsEditPemeriksaanFisik(false);
     
      // memperbarui data pada tampilan 
-     axios.get(`http://localhost:5000/igd/pasien/penanganan/triase/pemeriksaanfisik/${id}`)
+     axios.get(`${API_URL}/igd/pasien/penanganan/triase/pemeriksaanfisik/${id}`)
       .then(response => {
         setPasienIgdTriasePemeriksaanFisik(response.data);
       })
@@ -127,41 +123,70 @@ function handleEditPemeriksaanFisikSubmit (event) {
 //   }
   
 
- const canvasRef = useRef(null);
-  const ctxRef = useRef(null);
-  const isDrawing = useRef(false);
+const canvasRef = useRef(null);
+const ctxRef = useRef(null);
+const isDrawing = useRef(false);
+const drawingHistory = useRef([]);
+const undoHistory = useRef([]);
 
- useEffect(() => {
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    ctxRef.current = ctx;
-    const image = new Image();
-    image.src = humanImages; // Ganti dengan path ke gambar yang ingin digunakan sebagai background
-    image.onload = () => {
-      ctx.drawImage(image, 0, 0, canvas.width, canvas.height); // Menggambar gambar sebagai background pada canvas
-    };
-  }, []);
-
-  const startDrawing = (e) => {
-    isDrawing.current = true;
-    const ctx = ctxRef.current;
-    const { offsetX, offsetY } = e.nativeEvent;
-    ctx.beginPath();
-    ctx.moveTo(offsetX, offsetY);
+useEffect(() => {
+  const canvas = canvasRef.current;
+  const ctx = canvas.getContext('2d');
+  ctxRef.current = ctx;
+  const image = new Image();
+  image.src = humanImages; // Ganti dengan path ke gambar yang ingin digunakan sebagai background
+  image.onload = () => {
+    ctx.drawImage(image, 0, 0, canvas.width, canvas.height); // Menggambar gambar sebagai background pada canvas
   };
+}, []);
 
-  const draw = (e) => {
-    if (!isDrawing.current) return;
-    const ctx = ctxRef.current;
-    const { offsetX, offsetY } = e.nativeEvent;
-    ctx.lineTo(offsetX, offsetY);
-    ctx.stroke();
-  };
+const startDrawing = (e) => {
+  isDrawing.current = true;
+  const ctx = ctxRef.current;
+  const { offsetX, offsetY } = e.nativeEvent;
+  ctx.beginPath();
+  ctx.moveTo(offsetX, offsetY);
+};
 
-  const stopDrawing = () => {
-    isDrawing.current = false;
-  };
+const draw = (e) => {
+  if (!isDrawing.current) return;
+  const ctx = ctxRef.current;
+  const { offsetX, offsetY } = e.nativeEvent;
+  ctx.lineTo(offsetX, offsetY);
+  ctx.stroke();
+};
 
+const stopDrawing = () => {
+  isDrawing.current = false;
+  const ctx = ctxRef.current;
+  // Menyimpan informasi penggambaran dalam history
+  const imageData = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
+  drawingHistory.current.push(imageData);
+  // Menghapus history undo saat ada aksi penggambaran baru
+  undoHistory.current = [];
+};
+
+const undo = () => {
+  const ctx = ctxRef.current;
+  const imageData = drawingHistory.current.pop();
+  if (imageData) {
+    // Menyimpan informasi penggambaran dalam history undo sebelum dihapus
+    undoHistory.current.push(ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height));
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    ctx.putImageData(imageData, 0, 0);
+  }
+};
+
+const redo = () => {
+  const ctx = ctxRef.current;
+  const imageData = undoHistory.current.pop();
+  if (imageData) {
+    // Menyimpan informasi penggambaran dalam history drawing sebelum dihapus
+    drawingHistory.current.push(ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height));
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    ctx.putImageData(imageData, 0, 0);
+  }
+};
 
 
   return (
@@ -172,18 +197,21 @@ function handleEditPemeriksaanFisikSubmit (event) {
 
     <div className='container border border-state-300  bg-white p-2 text-left'>
 
-    <canvas
-      ref={canvasRef}
-      width={400}
-      height={300}
-      onMouseDown={startDrawing}
-      onMouseMove={draw}
-      onMouseUp={stopDrawing}
-      onMouseOut={stopDrawing}
-    
-    >
-      Canvas tidak didukung
-    </canvas>
+ <div className='container'>
+      <canvas
+        ref={canvasRef}
+        width={400}
+        height={300}
+        onMouseDown={startDrawing}
+        onMouseMove={draw}
+        onMouseUp={stopDrawing}
+        onMouseOut={stopDrawing}
+      >
+        Canvas tidak didukung
+      </canvas>
+      <button onClick={undo}>Undo</button>
+      <button onClick={redo}>Redo</button>
+    </div>
 
 {isPemeriksaanFisik &&
     <div className='container'>

@@ -1,8 +1,9 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect} from 'react';
+import { API_URL } from '../../../../config';
 import {useParams} from "react-router-dom";
 import axios from "axios";
 import editIcon from '../../../../images/edit2.png';
-import Checkbox from './Checkbox';
+import Checkbox from '../../../../component/checkbox/Checkbox';
 
 const Ats = () => {
 
@@ -65,7 +66,7 @@ const [idAtsValue, setIdAtsValue] = useState();
 // fetch data ATS
  function fetchIgdTriaseAts(id) {
       axios
-      .get(`http://localhost:5000/igd/pasien/penanganan/triase/ats/${id}`)
+      .get(`${API_URL}/igd/pasien/penanganan/triase/ats/${id}`)
        .then(response => {
       const data = response.data; 
       setDataAts(data); 
@@ -238,7 +239,7 @@ const handleSubmit = async (event) => {
   event.preventDefault();
 
     try {
-      const response = await fetch('http://localhost:5000/igd/pasien/penanganan/triase/ats/', {
+      const response = await fetch(`${API_URL}/igd/pasien/penanganan/triase/ats/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -289,7 +290,7 @@ function handleEditAtsSubmit (event) {
   event.preventDefault();
 
 
-  axios.patch(`http://localhost:5000/igd/pasien/penanganan/triase/ats/${idAtsValue}`, {
+  axios.patch(`${API_URL}/igd/pasien/penanganan/triase/ats/${idAtsValue}`, {
 
     id_pasien_igd: nilai,
     jalan_nafas: jalanNafasEditString, 
@@ -311,7 +312,7 @@ function handleEditAtsSubmit (event) {
     setIsTampilanEditAts(false);
     
      // memperbarui data pada tampilan 
-     axios.get(`http://localhost:5000/igd/pasien/penanganan/triase/ats/${id}`)
+     axios.get(`${API_URL}/igd/pasien/penanganan/triase/ats/${id}`)
       .then(response => {
         setDataAts(response.data);
       })
@@ -346,7 +347,6 @@ function handleEditAtsSubmit (event) {
 
     <div className='container border border-state-300  bg-white p-2 text-left'>
     <div class="w-full overflow-hidden">
-{/* nilaiIdPasienIgd */}
 
 {isTampilanAts && 
   <div className='tampilanAts'>

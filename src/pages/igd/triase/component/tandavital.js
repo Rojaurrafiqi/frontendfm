@@ -1,7 +1,9 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect} from 'react';
 import {useParams} from "react-router-dom";
 import axios from "axios";
 import editIcon from '../../../../images/edit2.png';
+import { API_URL } from '../../../../config';
+
 
 const Tandavital = (props) => {
 
@@ -23,7 +25,7 @@ const Tandavital = (props) => {
     //fetch data tanda vital
     function fetchTriaseTandaVitalIgd(id) {
       axios
-      .get(`http://localhost:5000/igd/pasien/penanganan/triase/tandavital/${id}`)
+      .get(`${API_URL}/igd/pasien/penanganan/triase/tandavital/${id}`)
        .then(response => {
       const data = response.data; 
       setPasienIgdTriaseTandaVital(data); 
@@ -53,7 +55,7 @@ function handleTandaVital(event) {
   const data = Object.fromEntries(formData.entries())
 
 
-  axios.post(`http://localhost:5000/igd/pasien/penanganan/triase/tandavital`, {
+  axios.post(`${API_URL}/igd/pasien/penanganan/triase/tandavital`, {
     ...data,
     id_pasien_igd: nilai
   })
@@ -87,7 +89,7 @@ function handleEditTandaVitalSubmit (event) {
   const formData = new FormData(event.target);
   const data = Object.fromEntries(formData.entries())
 
-  axios.patch(`http://localhost:5000/igd/pasien/penanganan/triase/tandavital/${idTandaVitalValue}`, {
+  axios.patch(`${API_URL}/igd/pasien/penanganan/triase/tandavital/${idTandaVitalValue}`, {
      ...data,
     id_pasien_igd: nilai
 
@@ -100,7 +102,7 @@ function handleEditTandaVitalSubmit (event) {
     setIsEditTandaVital(false);
     
      // memperbarui data pada tampilan 
-     axios.get(`http://localhost:5000/igd/pasien/penanganan/triase/tandavital/${id}`)
+     axios.get(`${API_URL}/igd/pasien/penanganan/triase/tandavital/${id}`)
       .then(response => {
         setPasienIgdTriaseTandaVital(response.data);
       })

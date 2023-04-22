@@ -1,4 +1,5 @@
-import React, {useState, useEffect, useRef} from 'react'
+import React, {useState, useEffect, useRef} from 'react';
+import { API_URL } from '../../../../config';
 import {useParams} from "react-router-dom";
 import axios from "axios";
 
@@ -21,7 +22,7 @@ const [idPermasalahanValue, setIdPermasalahanValue] = useState([]);
 //fetch data Permasalahan
   function fetchIgdTriasePermasalahan(id) {
       axios
-      .get(`http://localhost:5000/igd/pasien/penanganan/triase/permasalahan/${id}`)
+      .get(`${API_URL}/igd/pasien/penanganan/triase/permasalahan/${id}`)
        .then(response => {
       const data = response.data; 
       setPasienIgdTriasePermasalahan(data); 
@@ -49,7 +50,7 @@ function handlePermasalahan(event) {
   const data = Object.fromEntries(formData.entries())
 
 
-  axios.post(`http://localhost:5000/igd/pasien/penanganan/triase/permasalahan`, {
+  axios.post(`${API_URL}/igd/pasien/penanganan/triase/permasalahan`, {
     ...data,
     id_pasien_igd: nilai
   })
@@ -95,7 +96,7 @@ function handleEditPermasalahanSubmit (event) {
   const formData = new FormData(event.target);
   const data = Object.fromEntries(formData.entries())
 
-  axios.patch(`http://localhost:5000/igd/pasien/penanganan/triase/permasalahan/${idPermasalahanValue}`, {
+  axios.patch(`${API_URL}/igd/pasien/penanganan/triase/permasalahan/${idPermasalahanValue}`, {
      ...data,
     id_pasien_igd: nilai
   })
@@ -107,7 +108,7 @@ function handleEditPermasalahanSubmit (event) {
     setIsEditPermasalahan(false);
     
      // memperbarui data pada tampilan 
-     axios.get(`http://localhost:5000/igd/pasien/penanganan/triase/permasalahan/${id}`)
+     axios.get(`${API_URL}/igd/pasien/penanganan/triase/permasalahan/${id}`)
       .then(response => {
         setPasienIgdTriasePermasalahan(response.data);
       })

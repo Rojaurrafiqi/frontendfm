@@ -1,4 +1,5 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect} from 'react';
+import { API_URL } from '../../../../config';
 import {useParams} from "react-router-dom";
 import axios from "axios";
 import editIcon from '../../../../images/edit2.png';
@@ -21,7 +22,7 @@ const Anamnesa = (props) => {
   //fetch data tanda vital
   function fetchIgdTriaseAnamnesa(id) {
       axios
-      .get(`http://localhost:5000/igd/pasien/penanganan/triase/anamnesa/${id}`)
+      .get(`${API_URL}/igd/pasien/penanganan/triase/anamnesa/${id}`)
        .then(response => {
       const data = response.data; 
       setPasienIgdTriaseAnamnesa(data); 
@@ -50,7 +51,7 @@ function handleAnamnesa(event) {
   const data = Object.fromEntries(formData.entries())
 
 
-  axios.post(`http://localhost:5000/igd/pasien/penanganan/triase/anamnesa`, {
+  axios.post(`${API_URL}/igd/pasien/penanganan/triase/anamnesa`, {
     ...data,
     id_pasien_igd: nilai
   })
@@ -84,7 +85,7 @@ function handleEditAnamnesaSubmit (event) {
   const formData = new FormData(event.target);
   const data = Object.fromEntries(formData.entries())
 
-  axios.patch(`http://localhost:5000/igd/pasien/penanganan/triase/anamnesa/${idAnamnesaValue}`, {
+  axios.patch(`${API_URL}/igd/pasien/penanganan/triase/anamnesa/${idAnamnesaValue}`, {
      ...data,
     id_pasien_igd: nilai
 
@@ -97,7 +98,7 @@ function handleEditAnamnesaSubmit (event) {
     setIsEditAnamnesa(false);
     
      // memperbarui data pada tampilan 
-     axios.get(`http://localhost:5000/igd/pasien/penanganan/triase/anamnesa/${id}`)
+     axios.get(`${API_URL}/igd/pasien/penanganan/triase/anamnesa/${id}`)
       .then(response => {
         setPasienIgdTriaseAnamnesa(response.data);
       })
@@ -141,7 +142,7 @@ function handleEditAnamnesaSubmit (event) {
                                     <td className='pr-7'>{data.riwayat_perjalanan_penyakit} </td>
                                 </tr>
                                 <tr >
-                                    <td>Riwayat Penyakit Terdahulu</td>
+                                    <td >Riwayat Penyakit Terdahulu</td>
                                     <td className='px-2'>:</td>
                                     <td className='pr-7'>{data.riwayat_penyakit_terdahulu} </td>
                                 </tr>
@@ -172,14 +173,14 @@ function handleEditAnamnesaSubmit (event) {
                     </td>               
                 </tr>             
                 <tr >
-                    <td>Riwayat Perjalanan Penyakit</td>
+                    <td className='pr-2'>Riwayat Perjalanan Penyakit</td>
                     <td className='pb-1'>
                       <textarea class="form-textarea mt-1 block w-full border border-black rounded-md py-2 px-1 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald300 focus:border-emerald300 sm:text-sm" id="textarea" name="riwayat_perjalanan_penyakit"></textarea>
                     </td>
                 
                 </tr>             
                 <tr >
-                    <td>Riwayat Penyakit Terdahulu</td>
+                    <td >Riwayat Penyakit Terdahulu</td>
                     <td className='pb-1'>
                       <textarea class="form-textarea mt-1 block w-full border border-black rounded-md py-2 px-1 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald300 focus:border-emerald300 sm:text-sm" id="textarea" name="riwayat_penyakit_terdahulu"></textarea>
                     </td>                    

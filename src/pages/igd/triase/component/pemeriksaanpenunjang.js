@@ -1,4 +1,5 @@
-import React, {useState, useEffect, useRef} from 'react'
+import React, {useState, useEffect, useRef} from 'react';
+import { API_URL } from '../../../../config';
 import {useParams} from "react-router-dom";
 import axios from "axios";
 import editIcon from '../../../../images/edit2.png';
@@ -28,7 +29,7 @@ const Pemeriksaanpenunjang = () => {
   //fetch data tanda vital
   function fetchIgdTriasePemeriksaanPenunjang(id) {
       axios
-      .get(`http://localhost:5000/igd/pasien/penanganan/triase/pemeriksaanpenunjang/${id}`)
+      .get(`${API_URL}/igd/pasien/penanganan/triase/pemeriksaanpenunjang/${id}`)
        .then(response => {
       const data = response.data; 
       setPasienIgdTriasePemeriksaanPenunjang(data); 
@@ -68,7 +69,7 @@ function handlePemeriksaanPenunjang(event) {
   const data = Object.fromEntries(formData.entries())
 
 
-  axios.post(`http://localhost:5000/igd/pasien/penanganan/triase/pemeriksaanpenunjang`, {
+  axios.post(`${API_URL}/igd/pasien/penanganan/triase/pemeriksaanpenunjang`, {
     ...data,
     pilihJenisPemeriksaan,
     id_pasien_igd: nilai
@@ -116,7 +117,7 @@ function handleEditPemeriksaanPenunjangSubmit (event) {
   const formData = new FormData(event.target);
   const data = Object.fromEntries(formData.entries())
 
-  axios.patch(`http://localhost:5000/igd/pasien/penanganan/triase/pemeriksaanpenunjang/${idPemeriksaanPenunjangValue}`, {
+  axios.patch(`${API_URL}/igd/pasien/penanganan/triase/pemeriksaanpenunjang/${idPemeriksaanPenunjangValue}`, {
      ...data,
      pemeriksaan_penunjang:editPilihJenisPemeriksaan,
     id_pasien_igd: nilai
@@ -129,7 +130,7 @@ function handleEditPemeriksaanPenunjangSubmit (event) {
     setIsEditPemeriksaanPenunjang(false);
     
      // memperbarui data pada tampilan 
-     axios.get(`http://localhost:5000/igd/pasien/penanganan/triase/pemeriksaanpenunjang/${id}`)
+     axios.get(`${API_URL}/igd/pasien/penanganan/triase/pemeriksaanpenunjang/${id}`)
       .then(response => {
         setPasienIgdTriasePemeriksaanPenunjang(response.data);
       })

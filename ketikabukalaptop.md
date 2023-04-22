@@ -1,1 +1,1 @@
-pada file pendaftaran js. delete modal blm di atur, dan handdlemodal juga blm, method delete blm jalan, dan bada backend blm ada api untuk handle apus data
+1. ganti endpoind api url ke config untuk menjadi global telah selesai

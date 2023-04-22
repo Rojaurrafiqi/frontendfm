@@ -1,4 +1,5 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect} from 'react';
+import { API_URL } from '../../../config';
 import axios from "axios";
 import { useParams} from "react-router-dom";
 import Tandavital from './component/tandavital';
@@ -33,7 +34,7 @@ const Triase = (props) => {
     
     function fetchTriaseIgd(id) {
       axios
-      .get(`http://localhost:5000/igd/pasien/penanganan/triase/${id}`)
+      .get(`${API_URL}/igd/pasien/penanganan/triase/${id}`)
        .then(response => {
       const data = response.data; 
       setPasienIgdTriase(data); 
@@ -63,7 +64,7 @@ const Triase = (props) => {
   const formData = new FormData(event.target);
   const newKeluhan = formData.get('keluhan_utama');
 
-  axios.post(`http://localhost:5000/igd/pasien/penanganan/triase`, {
+  axios.post(`${API_URL}/igd/pasien/penanganan/triase`, {
     keluhan_utama: newKeluhan,
     id_pasien_igd: nilai
   })
@@ -99,7 +100,7 @@ function handleEditSubmit (event) {
    event.preventDefault();
   
  
-  axios.patch(`http://localhost:5000/igd/pasien/penanganan/triase/${idkeluhanvalue}`, {
+  axios.patch(`${API_URL}/igd/pasien/penanganan/triase/${idkeluhanvalue}`, {
     keluhan_utama: keluhanvalue,
     id_pasien_igd: nilai,
   })
@@ -112,7 +113,7 @@ function handleEditSubmit (event) {
     setFormData(false);
 
     // memperbarui data pada tampilan 
-     axios.get(`http://localhost:5000/igd/pasien/penanganan/triase/${idkeluhanvalue}`)
+     axios.get(`${API_URL}/igd/pasien/penanganan/triase/${idkeluhanvalue}`)
       .then(response => {
         setPasienIgdTriase(response.data);
       })

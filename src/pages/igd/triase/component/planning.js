@@ -1,4 +1,5 @@
-import React, {useState, useEffect, useRef} from 'react'
+import React, {useState, useEffect, useRef} from 'react';
+import { API_URL } from '../../../../config';
 import {useParams} from "react-router-dom";
 import axios from "axios";
 
@@ -18,14 +19,10 @@ const [editData, setEditData] = useState({});
 const [idPlanningValue, setIdPlanningValue] = useState([]); 
 
 
-
-
-
-
 //fetch data planning
   function fetchIgdTriasePlanning(id) {
       axios
-      .get(`http://localhost:5000/igd/pasien/penanganan/triase/planning/${id}`)
+      .get(`${API_URL}/igd/pasien/penanganan/triase/planning/${id}`)
        .then(response => {
       const data = response.data; 
       setPasienIgdTriasePlanning(data); 
@@ -53,7 +50,7 @@ function handlePlanning(event) {
   const data = Object.fromEntries(formData.entries())
 
 
-  axios.post(`http://localhost:5000/igd/pasien/penanganan/triase/planning`, {
+  axios.post(`${API_URL}/igd/pasien/penanganan/triase/planning`, {
     ...data,
     id_pasien_igd: nilai
   })
@@ -99,7 +96,7 @@ function handleEditPlanningSubmit (event) {
   const formData = new FormData(event.target);
   const data = Object.fromEntries(formData.entries())
 
-  axios.patch(`http://localhost:5000/igd/pasien/penanganan/triase/planning/${idPlanningValue}`, {
+  axios.patch(`${API_URL}/igd/pasien/penanganan/triase/planning/${idPlanningValue}`, {
      ...data,
     id_pasien_igd: nilai
   })
@@ -111,7 +108,7 @@ function handleEditPlanningSubmit (event) {
     setIsEditPlanning(false);
     
      // memperbarui data pada tampilan 
-     axios.get(`http://localhost:5000/igd/pasien/penanganan/triase/planning/${id}`)
+     axios.get(`${API_URL}/igd/pasien/penanganan/triase/planning/${id}`)
       .then(response => {
         setPasienIgdTriasePlanning(response.data);
       })
