@@ -12,7 +12,9 @@ const Wilayah = () => {
 
   useEffect(() => {
     const fetchProvinsi = async () => {
-      const response = await fetch("https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json");
+      const response = await fetch(
+        "https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json"
+      );
       const data = await response.json();
       setProvinsi(data);
     };
@@ -21,7 +23,9 @@ const Wilayah = () => {
 
   useEffect(() => {
     const fetchKabupatenKota = async () => {
-      const response = await fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/regencies/${selectedProvinsi}.json`);
+      const response = await fetch(
+        `https://www.emsifa.com/api-wilayah-indonesia/api/regencies/${selectedProvinsi}.json`
+      );
       const data = await response.json();
       setKabupatenKota(data);
       // console.log(kabupatenKota);
@@ -30,10 +34,12 @@ const Wilayah = () => {
       fetchKabupatenKota();
     }
   }, [selectedProvinsi]);
-  
+
   useEffect(() => {
     const fetchKecamatan = async () => {
-      const response = await fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/districts/${selectedKabupatenKota}.json`);
+      const response = await fetch(
+        `https://www.emsifa.com/api-wilayah-indonesia/api/districts/${selectedKabupatenKota}.json`
+      );
       const data = await response.json();
       setKecamatan(data);
       // console.log(kecamatan);
@@ -42,10 +48,12 @@ const Wilayah = () => {
       fetchKecamatan();
     }
   }, [selectedKabupatenKota]);
-  
+
   useEffect(() => {
     const fetchDesa = async () => {
-      const response = await fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/villages/${selectedKecamatan}.json`);
+      const response = await fetch(
+        `https://www.emsifa.com/api-wilayah-indonesia/api/villages/${selectedKecamatan}.json`
+      );
       const data = await response.json();
       setDesa(data);
       // console.log(kecamatan);
@@ -89,7 +97,10 @@ const Wilayah = () => {
       {selectedProvinsi && (
         <div>
           <label>Kabupaten/Kota:</label>
-          <select value={selectedKabupatenKota} onChange={handleKabupatenKotaChange}>
+          <select
+            value={selectedKabupatenKota}
+            onChange={handleKabupatenKotaChange}
+          >
             <option value="">Pilih Kabupaten/Kota</option>
             {kabupatenKota.map((item) => (
               <option key={item.id} value={item.id}>

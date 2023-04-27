@@ -14,8 +14,6 @@ const SearchWithPagination = () => {
     fetcher
   );
 
- 
-
   if (error) return <div>Error loading data.</div>;
   if (!data) return <div>Loading...</div>;
 
@@ -24,15 +22,15 @@ const SearchWithPagination = () => {
 
   return (
     <div>
-     <form >
-    <input
-      type="text"
-      value={searchQuery}
-      onChange={(e) => setSearchQuery(e.target.value)}
-      placeholder="Search..." autoFocus
-    />
-   
-  </form>
+      <form>
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="Search..."
+          autoFocus
+        />
+      </form>
 
       <ul>
         {data.data.map((item) => (
@@ -40,14 +38,11 @@ const SearchWithPagination = () => {
         ))}
       </ul>
 
-      <br/>
-      <br/>
-      <br/>
-      <br/>
-      <button
-        onClick={() => setPage((page) => page - 1)}
-        disabled={page === 0}
-      >
+      <br />
+      <br />
+      <br />
+      <br />
+      <button onClick={() => setPage((page) => page - 1)} disabled={page === 0}>
         Previous
       </button>
       <button
