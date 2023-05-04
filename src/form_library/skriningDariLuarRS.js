@@ -1,6 +1,6 @@
 import React from "react";
 
-const SkriningDariLuarRS = () => {
+const SkriningDariLuarRs = () => {
   return (
     <div>
       <div className="text-left pl-2 bg-emerald300 font-semibold">
@@ -310,4 +310,4 @@ const SkriningDariLuarRS = () => {
   );
 };
 
-export default SkriningDariLuarRS;
+export default SkriningDariLuarRs;

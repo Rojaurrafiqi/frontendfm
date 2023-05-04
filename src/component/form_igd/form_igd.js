@@ -28,15 +28,20 @@ const Form_igd = () => {
             <div className="text-left pl-2 bg-emerald300 font-semibold">
               Form
             </div>
-            <div className="text-left">
+            <div className="text-left text-sm">
               {data.map((item) => (
-                <ul className="pl-4 pb-2">
+                <ul className="px-2 ">
                   <li key={item.id}>
                     <button onClick={handleClick} value={item.nama_form}>
-                      {item.nama_form}
+                      {item.nama_form.replace(/([A-Z])/g, " $1").trim()}
                     </button>
                   </li>
                 </ul>
+                // <div className="px-2 text-sm text-left" key={item.id}>
+                //   <button onClick={handleClick} value={item.nama_form}>
+                //     {item.nama_form.replace(/([A-Z])/g, " $1").trim()}
+                //   </button>
+                // </div>
               ))}
             </div>
           </div>
