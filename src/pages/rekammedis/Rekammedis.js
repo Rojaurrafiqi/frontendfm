@@ -2,7 +2,6 @@ import React from "react";
 import Pasien from "../pendaftaran/pasien";
 import Sidebar from "../templates/sidebar";
 import Header from "../templates/header";
-import Tandavital from "../igd/triase/component/tandavital";
 
 const Rekammedis = () => {
   return (

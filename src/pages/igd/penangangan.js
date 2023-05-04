@@ -6,6 +6,7 @@ import Triase from "./triase/triase";
 import AsasmenAwal from "./asasmenawal";
 import Sidebar from "../templates/sidebar";
 import Header from "../templates/header";
+import Form_igd from "../../component/form_igd/form_igd";
 
 const Penangangan = (props) => {
   // mengambil link sebelumnya
@@ -64,6 +65,7 @@ const Penangangan = (props) => {
 
         <div class="flex-auto  bg-dasar border-l-2 border-opacity-30 border-gray-300 shadow-md">
           <Header />
+
           <div class="container mx-auto px-8 py-auto">
             <div className="flex justify-between my-3">
               <button
@@ -136,6 +138,7 @@ const Penangangan = (props) => {
               >
                 TRIASE
               </button>
+
               <button
                 onClick={handleAsasmenAwal}
                 className={`ml-1 py-0.2 px-1 mr-1 bg-emerald text-white hover:opacity-75 ${
@@ -179,7 +182,9 @@ const Penangangan = (props) => {
 
             <div class="container mx-auto overflow-x-hidden ">
               <div className="container">
-                {isTriaseShown && <Triase id={pasienigdbyid.id} />}
+                {/* {isTriaseShown && <Triase id={pasienigdbyid.id} />} */}
+                {/* form triase diganti sementara untuk percobaan */}
+                {isTriaseShown && <Form_igd id={pasienigdbyid.id} />}
                 {isAsasmenAwalShown && <AsasmenAwal id={pasienigdbyid.id} />}
               </div>
             </div>

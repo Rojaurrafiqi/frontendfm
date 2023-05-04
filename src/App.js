@@ -1,24 +1,23 @@
-import './App.css';
-import Rekammedis from './pages/rekammedis/Rekammedis.js';
-import Igd from './pages/igd/Igd.js';
+import "./App.css";
+import Rekammedis from "./pages/rekammedis/Rekammedis.js";
+import Igd from "./pages/igd/Igd.js";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
-import Penangangan from './pages/igd/penangangan';
-
+import Penangangan from "./pages/igd/penangangan";
+import Form from "./pages/form/form";
 
 function App() {
   return (
-
-   <BrowserRouter>
-    <div className='App'>
-      <Routes>
-        <Route path='/' element={<Rekammedis />}/>
-        <Route path='/pasien' element={<Rekammedis />}/>
-        <Route path='/igd' element={<Igd />}/>
-        <Route path='/igd/pasien/tangani/:id' element={<Penangangan />}/>
-      </Routes>
-    </div>
-   </BrowserRouter>
-
+    <BrowserRouter>
+      <div className="App">
+        <Routes>
+          <Route path="/" element={<Rekammedis />} />
+          <Route path="/pasien" element={<Rekammedis />} />
+          <Route path="/igd" element={<Igd />} />
+          <Route path="/igd/pasien/tangani/:id" element={<Penangangan />} />
+          <Route path="/form" element={<Form />} />
+        </Routes>
+      </div>
+    </BrowserRouter>
   );
 }
 
