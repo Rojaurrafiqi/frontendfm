@@ -6,6 +6,7 @@ import handleForm from "../form_default/handleForm";
 const Form_igd = () => {
   const [result, setResult] = useState(null);
   const [data, setData] = useState([]);
+  const [activeLink, setActiveLink] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -18,34 +19,40 @@ const Form_igd = () => {
   const handleClick = (event) => {
     const value = event.currentTarget.getAttribute("value");
     setResult(handleForm(value));
+    setActiveLink(value);
   };
 
   return (
     <div>
       <div className="container pb-5">
         <div class="flex">
-          <div className="container bg-white m-4 w-1/5">
-            <div className="text-left pl-2 bg-emerald300 font-semibold">
-              Form
-            </div>
-            <div className="text-left text-sm">
-              {data.map((item) => (
-                <ul className="px-2 ">
-                  <li key={item.id}>
-                    <button onClick={handleClick} value={item.nama_form}>
-                      {item.nama_form.replace(/([A-Z])/g, " $1").trim()}
-                    </button>
-                  </li>
-                </ul>
-                // <div className="px-2 text-sm text-left" key={item.id}>
-                //   <button onClick={handleClick} value={item.nama_form}>
-                //     {item.nama_form.replace(/([A-Z])/g, " $1").trim()}
-                //   </button>
-                // </div>
-              ))}
+          <div className="container bg-white m-4 w-1/5 text-left">
+            <div class="overflow-x-auto w-full">
+              <div className="pl-2 bg-emerald300 font-semibold">Form</div>
+              <div className="text-sm">
+                {data.map((item) => (
+                  <ul>
+                    <li
+                      key={item.id}
+                      className={`hover:text-white hover:bg-emerald px-2 my-0.5 ${
+                        activeLink === item.nama_form
+                          ? "bg-emerald text-white"
+                          : ""
+                      }`}
+                    >
+                      <a
+                        className="cursor-pointer"
+                        onClick={handleClick}
+                        value={item.nama_form}
+                      >
+                        {item.nama_form.replace(/([A-Z])/g, " $1").trim()}
+                      </a>
+                    </li>
+                  </ul>
+                ))}
+              </div>
             </div>
           </div>
-
           <div className="container bg-white m-4 w-4/5">{result && result}</div>
         </div>
       </div>

@@ -1,18 +1,11 @@
 import React, { useState } from "react";
 import Sidebar from "../templates/sidebar";
 import Header from "../templates/header";
-import { useNavigate, useParams } from "react-router-dom";
-import ResumeMedis from "../../form_library/resumeMedis";
-import PengantarRawat from "../../form_library/pengantarRawat";
-import SkriningDariLuarRs from "../../form_library/skriningDariLuarRs";
-import ObservasiPasien from "../../form_library/observasiPasien";
-import RekonsiliasiObat from "../../form_library/rekonsiliasiObat";
-import PengkajianAwalMedisPasienRawatInap from "../../form_library/pengkajianAwalMedisPasienRawatInap";
-import RencanaPemulanganPasien from "../../form_library/rencanaPemulanganPasien";
-import handleForm from "../../component/form_default/handleForm";
-import axios from "axios";
-import { API_URL } from "../../config";
-import { CSSTransition } from "react-transition-group";
+import { useNavigate } from "react-router-dom";
+import PageForm from "./PageForm";
+import PageTableIGD from "./PageTableIGD";
+import PageTableRalan from "./PageTableRalan";
+import PageTableRanap from "./PageTableRanap";
 
 const Form = () => {
   const navigate = useNavigate();
@@ -20,35 +13,60 @@ const Form = () => {
     navigate(-1);
   };
 
-  const [result, setResult] = useState(null);
-  const [success, setSuccess] = useState(false);
+  const [isPageForm, setIsPageForm] = useState(true);
+  const [isPageFormActive, setIsPageFormActive] = useState(true);
+  const [isPageTableIGD, setIsPageTableIGD] = useState(false);
+  const [isPageTableIGDActive, setIsPageTableIGDActive] = useState(false);
+  const [isPageTableRalan, setIsPageTableRalan] = useState(false);
+  const [isPageTableRalanActive, setIsPageTableRalanActive] = useState(false);
+  const [isPageTableRanap, setIsPageTableRanap] = useState(false);
+  const [isPageTableRanapActive, setIsPageTableRanapActive] = useState(false);
 
-  const handleClick = (event) => {
-    // tangkap value dari ul
-    const value = event.currentTarget.getAttribute("value");
-    // kirim value ke component handle form
-    setResult(handleForm(value));
-  };
+  function handlePageForm() {
+    setIsPageForm(true);
+    setIsPageTableIGD(false);
+    setIsPageTableRalan(false);
+    setIsPageTableRanap(false);
 
-  const handleSentFormIGD = (resultValue) => {
-    // menangkap result value
-    const value = resultValue.type.name;
+    setIsPageFormActive(true);
+    setIsPageTableIGDActive(false);
+    setIsPageTableRalanActive(true);
+    setIsPageTableRanapActive(false);
+  }
 
-    // mengirim data ke BA setdefault form IGD
-    axios
-      .patch(`${API_URL}/form/default/igd`, {
-        nama_form: value,
-      })
-      .then((response) => {
-        setSuccess(true);
-        setTimeout(() => {
-          setSuccess(false);
-        }, 1000);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
+  function handleTableRalan() {
+    setIsPageTableRalan(true);
+    setIsPageForm(false);
+    setIsPageTableIGD(false);
+    setIsPageTableRanap(false);
+
+    setIsPageTableRalanActive(true);
+    setIsPageFormActive(false);
+    setIsPageTableIGDActive(false);
+    setIsPageTableRanapActive(false);
+  }
+  function handleTableRanap() {
+    setIsPageTableRanap(true);
+    setIsPageForm(false);
+    setIsPageTableIGD(false);
+    setIsPageTableRalan(false);
+
+    setIsPageTableRanapActive(true);
+    setIsPageFormActive(false);
+    setIsPageTableIGDActive(false);
+    setIsPageTableRalanActive(false);
+  }
+  function handleTableIGD() {
+    setIsPageTableIGD(true);
+    setIsPageForm(false);
+    setIsPageTableRalan(false);
+    setIsPageTableRanap(false);
+
+    setIsPageTableIGDActive(true);
+    setIsPageFormActive(false);
+    setIsPageTableRalanActive(false);
+    setIsPageTableRanapActive(false);
+  }
 
   return (
     <div class="h-full">
@@ -56,10 +74,8 @@ const Form = () => {
         <div class="flex-none">
           <Sidebar />
         </div>
-
         <div class="flex-auto bg-dasar border-l-2 border-opacity-30 border-gray-300 shadow-md">
           <Header />
-
           <div className="flex justify-between my-3 mx-4">
             <button
               className="py-0.2 px-1 mr-1 bg-emerald text-white  hover:opacity-75"
@@ -68,79 +84,52 @@ const Form = () => {
             >
               KEMBALI
             </button>
-            <button
-              onClick={() => handleSentFormIGD(result)}
-              className="py-0.2 px-1 mr-1 bg-emerald text-white  hover:opacity-75"
-              type="button"
-            >
-              SEND TO IGD
-            </button>
-          </div>
-
-          <div className="container flex justify-end">
-            {success && (
-              <div className="bg-green-100 border-l-4 border-green-500 text-green-700 px-2 py-1 mx-4">
-                <p className="font-bold">Success! sent to IGD</p>
-              </div>
-            )}
-          </div>
-
-          <div class="flex">
-            <div className="container bg-white m-4 w-1/4">
-              <div className="font-bold text-left px-2 py-2">All Form</div>
-              <div className="text-left space-y-2">
-                <ul className="px-2 pb-2 text-sm">
-                  <li>
-                    <button onClick={handleClick} value="ResumeMedis">
-                      Resume Medis
-                    </button>
-                  </li>
-                  <li>
-                    <button onClick={handleClick} value="PengantarRawat">
-                      Pengantar Rawat
-                    </button>
-                  </li>
-                  <li>
-                    <button onClick={handleClick} value="SkriningDariLuarRs">
-                      Skrining Dari Luar RS
-                    </button>
-                  </li>
-                  <li>
-                    <button onClick={handleClick} value="ObservasiPasien">
-                      Rekonsiliasi Obat
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      onClick={handleClick}
-                      value="PengkajianAwalMedisPasienRawatInap"
-                    >
-                      Pengkajian Awal Medis Pasien Rawat Inap
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      onClick={handleClick}
-                      value="RencanaPemulanganPasien"
-                    >
-                      Rencana Pemulangan Pasien
-                    </button>
-                  </li>
-                </ul>
+            <div className="table-button">
+              <div className="flex">
+                <button
+                  onClick={handlePageForm}
+                  className={`ml-1 py-0.2 px-1 mr-1 bg-emerald text-white hover:opacity-75 ${
+                    isPageFormActive ? "opacity-75" : ""
+                  }`}
+                  type="button"
+                >
+                  Form
+                </button>
+                <button
+                  onClick={handleTableIGD}
+                  className={`ml-1 py-0.2 px-1 mr-1 bg-emerald text-white hover:opacity-75 ${
+                    isPageTableIGDActive ? "opacity-75" : ""
+                  }`}
+                  type="button"
+                >
+                  Table Default IGD
+                </button>
+                <button
+                  onClick={handleTableRanap}
+                  className={`ml-1 py-0.2 px-1 mr-1 bg-emerald text-white hover:opacity-75 ${
+                    isPageTableRanapActive ? "opacity-75" : ""
+                  }`}
+                  type="button"
+                >
+                  Table Default Ranap
+                </button>
+                <button
+                  onClick={handleTableRalan}
+                  className={`ml-1 py-0.2 px-1 mr-1 bg-emerald text-white hover:opacity-75 ${
+                    isPageTableRalanActive ? "opacity-75" : ""
+                  }`}
+                  type="button"
+                >
+                  Table Default Ralan
+                </button>
               </div>
             </div>
-            <div className="container bg-white m-4 w-3/4">
-              {/* <ResumeMedis /> */}
-              {/* <PengantarRawat /> */}
-              {/* <SkriningDariLuarRS /> */}
-              {/* <ObservasiPasien /> */}
-              {/* <RekonsiliasiObat /> */}
-              {/* <PengkajianAwalMedisPasienRawatInap /> */}
-              {/* <RencanaPemulanganPasien /> */}
-
-              {result && result}
-            </div>
           </div>
+
+          {isPageForm && <PageForm />}
+          {isPageTableIGD && <PageTableIGD />}
+          {isPageTableRalan && <PageTableRalan />}
+          {isPageTableRanap && <PageTableRanap />}
         </div>
       </div>
     </div>

@@ -43,7 +43,6 @@ const Penangangan = (props) => {
   const handleTriase = () => {
     setIsTriaseShown(true);
     setIsTriaseSelected(true);
-
     setisAsasmenAwalShown(false);
     setIsAsasmenAwalSelected(false);
   };
@@ -51,7 +50,6 @@ const Penangangan = (props) => {
   const handleAsasmenAwal = () => {
     setisAsasmenAwalShown(true);
     setIsAsasmenAwalSelected(true);
-
     setIsTriaseShown(false);
     setIsTriaseSelected(false);
   };
