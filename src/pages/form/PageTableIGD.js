@@ -66,23 +66,34 @@ const PageTableIGD = () => {
               </tr>
             </thead>
             <tbody>
-              {data.map((item, index) => (
-                <tr key={item.id}>
-                  <td class="border border-black px-4 py-1">{index + 1}</td>
-                  <td class="border border-black px-4 py-1">
-                    {item.nama_form}
-                  </td>
-                  <td class="border border-black px-4 py-1">
-                    <button
-                      onClick={() => handleShowModal(item.id)}
-                      className="ml-1 py-0.1 px-1 mr-1 my-0.2 bg-red-600 text-white  hover:opacity-75"
-                      type="button"
-                    >
-                      Delete
-                    </button>
+              {data.length > 0 ? (
+                data.map((item, index) => (
+                  <tr key={item.id}>
+                    <td class="border border-black px-4 py-1">{index + 1}</td>
+                    <td class="border border-black px-4 py-1">
+                      {item.nama_form.replace(/([A-Z])/g, " $1").trim()}
+                    </td>
+                    <td class="border border-black px-4 py-1">
+                      <button
+                        onClick={() => handleShowModal(item.id)}
+                        className="ml-1 py-0.1 px-1 mr-1 my-0.2 bg-red-600 text-white  hover:opacity-75"
+                        type="button"
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td
+                    colSpan="3"
+                    className="text-center px-1 font-semibold text-red-500"
+                  >
+                    Belum mempunyai setup data form untuk Rawat Inap.
                   </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         </div>

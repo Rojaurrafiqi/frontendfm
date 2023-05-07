@@ -71,7 +71,7 @@ const PageTableRalan = () => {
                   <tr key={item.id}>
                     <td class="border border-black px-4 py-1">{index + 1}</td>
                     <td class="border border-black px-4 py-1">
-                      {item.nama_form}
+                      {item.nama_form.replace(/([A-Z])/g, " $1").trim()}
                     </td>
                     <td class="border border-black px-4 py-1">
                       <button

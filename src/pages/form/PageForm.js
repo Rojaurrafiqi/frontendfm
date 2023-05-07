@@ -4,7 +4,9 @@ import axios from "axios";
 import { API_URL } from "../../config";
 
 const PageForm = () => {
-  const [success, setSuccess] = useState(false);
+  const [successIGD, setSuccessIGD] = useState(false);
+  const [successRanap, setSuccessRanap] = useState(false);
+  const [successRalan, setSuccessRalan] = useState(false);
   const [isButtonSendFormOpen, setIsButtonSendFormOpen] = useState(false);
   const [result, setResult] = useState(null);
 
@@ -29,10 +31,52 @@ const PageForm = () => {
         nama_form: value,
       })
       .then((response) => {
-        setSuccess(true);
+        setSuccessIGD(true);
         setTimeout(() => {
-          setSuccess(false);
+          setSuccessIGD(false);
         }, 1000);
+        setIsButtonSendFormOpen(!isButtonSendFormOpen);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  const handleSentFormRanap = (resultValue) => {
+    // menangkap result value
+    const value = resultValue.type.name;
+
+    // mengirim data ke BA setdefault form Ranap
+    axios
+      .patch(`${API_URL}/form/default/ranap`, {
+        nama_form: value,
+      })
+      .then((response) => {
+        setSuccessRanap(true);
+        setTimeout(() => {
+          setSuccessRanap(false);
+        }, 1000);
+        setIsButtonSendFormOpen(!isButtonSendFormOpen);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+  const handleSentFormRalan = (resultValue) => {
+    // menangkap result value
+    const value = resultValue.type.name;
+
+    // mengirim data ke BA setdefault form Ralan
+    axios
+      .patch(`${API_URL}/form/default/ralan`, {
+        nama_form: value,
+      })
+      .then((response) => {
+        setSuccessRalan(true);
+        setTimeout(() => {
+          setSuccessRalan(false);
+        }, 1000);
+        setIsButtonSendFormOpen(!isButtonSendFormOpen);
       })
       .catch((error) => {
         console.error(error);
@@ -42,9 +86,19 @@ const PageForm = () => {
     <div>
       <div className="flex justify-between px-4">
         <div className="container w-auto">
-          {success && (
+          {successIGD && (
             <div className="bg-green-100 border-l-4 border-green-500 text-green-700 px-2 py-1">
               <p className="font-bold">Success! sent to IGD</p>
+            </div>
+          )}
+          {successRanap && (
+            <div className="bg-green-100 border-l-4 border-green-500 text-green-700 px-2 py-1">
+              <p className="font-bold">Success! sent to Rawat Inap</p>
+            </div>
+          )}
+          {successRalan && (
+            <div className="bg-green-100 border-l-4 border-green-500 text-green-700 px-2 py-1">
+              <p className="font-bold">Success! sent to Rawat Jalan</p>
             </div>
           )}
         </div>
@@ -68,7 +122,6 @@ const PageForm = () => {
               >
                 <a
                   href="#"
-                  //   onClick={toggleDropdownSendForm}
                   onClick={() => handleSentFormIGD(result)}
                   className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                   role="menuitem"
@@ -76,8 +129,7 @@ const PageForm = () => {
                   IGD
                 </a>
                 <a
-                  //   onClick={toggleDropdownSendForm}
-                  onClick={() => handleSentFormIGD(result)}
+                  onClick={() => handleSentFormRanap(result)}
                   href="#"
                   className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                   role="menuitem"
@@ -85,8 +137,7 @@ const PageForm = () => {
                   RANAP
                 </a>
                 <a
-                  //   onClick={toggleDropdownSendForm}
-                  onClick={() => handleSentFormIGD(result)}
+                  onClick={() => handleSentFormRalan(result)}
                   href="#"
                   className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                   role="menuitem"
@@ -140,7 +191,15 @@ const PageForm = () => {
             </ul>
           </div>
         </div>
-        <div className="container bg-white m-4 w-3/4">{result && result}</div>
+        <div className="container bg-white m-4 w-3/4">
+          {result == null ? (
+            <p className="text-left font-semibold text-red-500 px-4 py-4">
+              Silahkan pilih form terlebih dahulu
+            </p>
+          ) : (
+            result && result
+          )}
+        </div>
       </div>
     </div>
   );

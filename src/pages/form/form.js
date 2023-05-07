@@ -30,7 +30,7 @@ const Form = () => {
 
     setIsPageFormActive(true);
     setIsPageTableIGDActive(false);
-    setIsPageTableRalanActive(true);
+    setIsPageTableRalanActive(false);
     setIsPageTableRanapActive(false);
   }
 
