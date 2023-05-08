@@ -273,7 +273,7 @@ const Pendaftaran = () => {
               </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
-              {allpasienigd &&
+              {allpasienigd && allpasienigd.length > 0 ? (
                 allpasienigd.map((pasien, index) => (
                   <tr key={pasien.id}>
                     <td class=" py-0.3 whitespace-nowrap">{index + 1}</td>
@@ -309,7 +309,14 @@ const Pendaftaran = () => {
                       </button>
                     </td>
                   </tr>
-                ))}
+                ))
+              ) : (
+                <tr>
+                  <td colspan="7" className="bg-gray-200 w-full">
+                    Belum ada pasien dalam antrian IGD
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
@@ -343,7 +350,7 @@ const Pendaftaran = () => {
               </tr>
             </thead>
             <tbody class="bg-white divide-y px-6 divide-gray-200">
-              {listPasienIgdPenanganan &&
+              {listPasienIgdPenanganan && listPasienIgdPenanganan.length > 0 ? (
                 listPasienIgdPenanganan.map((pasien, index) => (
                   <tr key={pasien.id}>
                     <td class=" py-0.3 whitespace-nowrap">{index + 1}</td>
@@ -386,7 +393,14 @@ const Pendaftaran = () => {
                       </Link>
                     </td>
                   </tr>
-                ))}
+                ))
+              ) : (
+                <tr>
+                  <td colspan="7" className="bg-gray-200 w-full">
+                    Belum ada pasien dalam antrian IGD
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>

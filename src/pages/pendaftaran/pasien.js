@@ -8,6 +8,7 @@ import editIcon from "../../images/edit.png";
 import deleteIcon from "../../images/delete.png";
 import detailIcon from "../../images/detail.png";
 import closeIcon from "../../images/close.png";
+import { Link } from "react-router-dom";
 
 const Pasien = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -1682,7 +1683,6 @@ const Pasien = () => {
                   <tr key={pasien.id}>
                     <td className="px-0 py-1 whitespace-nowrap">
                       <div className="text-sm text-gray-900">
-                        {" "}
                         {pasien.no_rm}
                       </div>
                     </td>
@@ -1700,16 +1700,17 @@ const Pasien = () => {
                     </td>
 
                     <td className="px-0 py-0 whitespace-nowrap text-center text-sm font-medium">
-                      <button className="text-indigo-600 hover:text-indigo-900">
-                        {" "}
-                        <img
-                          src={detailIcon}
-                          className="m-1"
-                          title="Detail"
-                          width="20px"
-                          alt="detail"
-                        />
-                      </button>
+                      <Link to={`/pasien/detail/${pasien.id}`}>
+                        <button className="text-indigo-600 hover:text-indigo-900">
+                          <img
+                            src={detailIcon}
+                            className="m-1"
+                            title="Detail"
+                            width="20px"
+                            alt="detail"
+                          />
+                        </button>
+                      </Link>
                       <button
                         onClick={() => handleEdit(pasien)}
                         className="text-indigo-600 hover:text-indigo-900"

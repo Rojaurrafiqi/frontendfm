@@ -54,6 +54,19 @@ const Penangangan = (props) => {
     setIsTriaseSelected(false);
   };
 
+  function handleCheckout() {
+    axios
+      .patch(`${API_URL}/igd/pasien/checkout/${id}`, {
+        status: "selesai",
+      })
+      .then((response) => {
+        window.location.href = "/igd";
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
   return (
     <div class="h-full">
       <div class="flex">
@@ -74,6 +87,7 @@ const Penangangan = (props) => {
                 KEMBALI
               </button>
               <button
+                onClick={handleCheckout}
                 className="py-0.2 px-1 mr-1 bg-emerald text-white  hover:opacity-75"
                 type="button"
               >
