@@ -1657,7 +1657,7 @@ const Pasien = () => {
             <table className="min-w-full divide-y divide-gray-200">
               <thead>
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                     No RM
                   </th>
                   <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -1681,7 +1681,7 @@ const Pasien = () => {
               <tbody className="bg-white divide-y divide-gray-200">
                 {data.data.map((pasien, index) => (
                   <tr key={pasien.id}>
-                    <td className="px-0 py-1 whitespace-nowrap">
+                    <td className="px-6 text-center py-1 whitespace-nowrap">
                       <div className="text-sm text-gray-900">
                         {pasien.no_rm}
                       </div>

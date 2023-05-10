@@ -113,6 +113,19 @@ const Pendaftaran = () => {
     setIsDeleteOpen(false);
   };
 
+  function handleTanganiPasienIgd(pasienId) {
+    axios
+      .patch(`${API_URL}/igd/pasien/status/${pasienId}`, {
+        status: "sedang ditangani",
+      })
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
   useEffect(() => {
     if (searchQuery !== "") {
       fetch(`${API_URL}/igd/pasien?search=${searchQuery}&page=&limit=5`)
@@ -128,6 +141,8 @@ const Pendaftaran = () => {
     setTampilanSearch(false);
   };
 
+  // console.log(listPasienIgdPenanganan);
+
   return (
     <>
       <div className="container border border-state-300 bg-white p-5 mt-5 mb-4 ">
@@ -138,7 +153,7 @@ const Pendaftaran = () => {
               type="text"
               value={searchQuery}
               onChange={handleInputChange}
-              placeholder="Search..."
+              placeholder="Cari data pasien..."
               autoFocus
             />
             <button className="ml-1 py-0.2 px-1 bg-emerald text-white rounded hover:opacity-75">
@@ -254,19 +269,19 @@ const Pendaftaran = () => {
                 <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   No
                 </th>
-                <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th class="px-6 py-3 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Tanggal Masuk
                 </th>
-                <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th class="px-6 py-3 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Jam
                 </th>
-                <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th class="px-6 py-3 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                   No RM
                 </th>
-                <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th class="px-6 py-3 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Nama Pasien
                 </th>
-                <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th class="px-6 py-3 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Cara Masuk
                 </th>
                 <th class="px-6 py-3 bg-gray-50 text-left text-xs fonst-medium text-gray-500 uppercase tracking-wider"></th>
@@ -276,7 +291,9 @@ const Pendaftaran = () => {
               {allpasienigd && allpasienigd.length > 0 ? (
                 allpasienigd.map((pasien, index) => (
                   <tr key={pasien.id}>
-                    <td class=" py-0.3 whitespace-nowrap">{index + 1}</td>
+                    <td class=" py-0.3 px-6 text-left whitespace-nowrap">
+                      {index + 1}
+                    </td>
                     <td class=" py-0.3 whitespace-nowrap">
                       {pasien.tgl_masuk}
                     </td>
@@ -293,13 +310,13 @@ const Pendaftaran = () => {
                       {pasien.cara_masuk}
                     </td>
                     <td class=" py-0.3 whitespace-nowrap">
-                      <Link
-                        to={`/igd/pasien/tangani/${pasien.id}`}
-                        className="ml-1 py-0.1 my-0.2 px-1 mr-1 bg-emerald text-white  hover:opacity-75"
+                      <button
+                        onClick={() => handleTanganiPasienIgd(pasien.id)}
+                        className="ml-1 py-0.1 px-1 mr-1 my-0.2 bg-emerald text-white  hover:opacity-75"
                         type="button"
                       >
                         Tangani
-                      </Link>
+                      </button>
                       <button
                         onClick={() => handleShowModal(pasien.id)}
                         className="ml-1 py-0.1 px-1 mr-1 my-0.2 bg-red-600 text-white  hover:opacity-75"
@@ -331,19 +348,19 @@ const Pendaftaran = () => {
                 <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   No
                 </th>
-                <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th class="px-6 py-3 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Tanggal Masuk
                 </th>
-                <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th class="px-6 py-3 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Jam
                 </th>
-                <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th class="px-6 py-3 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                   No RM
                 </th>
-                <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th class="px-6 py-3 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Nama Pasien
                 </th>
-                <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th class="px-6 py-3 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Status Pasien
                 </th>
                 <th class="px-6 py-3 bg-gray-50 text-left text-xs fonst-medium text-gray-500 uppercase tracking-wider"></th>
@@ -353,7 +370,9 @@ const Pendaftaran = () => {
               {listPasienIgdPenanganan && listPasienIgdPenanganan.length > 0 ? (
                 listPasienIgdPenanganan.map((pasien, index) => (
                   <tr key={pasien.id}>
-                    <td class=" py-0.3 whitespace-nowrap">{index + 1}</td>
+                    <td class=" py-0.3 px-6 text-left whitespace-nowrap">
+                      {index + 1}
+                    </td>
                     <td class=" py-0.3 whitespace-nowrap">
                       {pasien.tgl_masuk}
                     </td>
@@ -366,7 +385,7 @@ const Pendaftaran = () => {
                     <td class=" py-0.3 whitespace-nowrap">
                       {pasien.pasien_rm.nama_lengkap}
                     </td>
-                    <td class=" py-0.3 whitespace-nowrap">
+                    {/* <td class=" py-0.3 whitespace-nowrap">
                       <span
                         className={`font-bold ${
                           pasien.triase_ats_pasien_igd[0].plan === "Zona Merah"
@@ -382,6 +401,9 @@ const Pendaftaran = () => {
                       >
                         {pasien.triase_ats_pasien_igd[0].plan}
                       </span>
+                    </td> */}
+                    <td className="py-0.3 whitespace-nowrap">
+                      {pasien.status}
                     </td>
                     <td class=" py-0.3 whitespace-nowrap">
                       <Link
@@ -397,7 +419,7 @@ const Pendaftaran = () => {
               ) : (
                 <tr>
                   <td colspan="7" className="bg-gray-200 w-full">
-                    Belum ada pasien dalam antrian IGD
+                    Belum ada pasien dalam daftar penanganan
                   </td>
                 </tr>
               )}

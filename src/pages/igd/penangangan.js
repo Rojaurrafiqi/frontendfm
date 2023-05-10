@@ -56,7 +56,7 @@ const Penangangan = (props) => {
 
   function handleCheckout() {
     axios
-      .patch(`${API_URL}/igd/pasien/checkout/${id}`, {
+      .patch(`${API_URL}/igd/pasien/status/${id}`, {
         status: "selesai",
       })
       .then((response) => {
@@ -95,8 +95,8 @@ const Penangangan = (props) => {
               </button>
             </div>
 
-            <div className="container border border-state-300  bg-white p-5">
-              <div className="container border border-black  mr-5 p-2 text-left">
+            <div className="container border border-state-300  bg-white p-2">
+              <div className="container border text-sm border-black  mr-5 p-2 text-left">
                 <tr>
                   <td>No RM Pasien</td>
                   <td className="px-2">:</td>
@@ -140,7 +140,7 @@ const Penangangan = (props) => {
               </div>
             </div>
 
-            <div className="flex my-4">
+            {/* <div className="flex my-4">
               <button
                 onClick={handleTriase}
                 className={`ml-1 py-0.2 px-1 mr-1 bg-emerald text-white hover:opacity-75 ${
@@ -190,7 +190,7 @@ const Penangangan = (props) => {
               >
                 KONSUL SPESIALIS
               </button>
-            </div>
+            </div> */}
 
             <div class="container mx-auto overflow-x-hidden ">
               <div className="container">

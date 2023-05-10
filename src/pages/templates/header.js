@@ -1,4 +1,5 @@
 import React from "react";
+import filemedisLogo from "../../images/logo-filemedis.png";
 
 const header = () => {
   return (
@@ -7,32 +8,25 @@ const header = () => {
         <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
           <div class="flex items-center justify-between h-14">
             {/* <!-- kiri --> */}
-            <div class="flex-shrink-0">
-              <a href="#" class="text-gray-600 font-bold">
-                12-12-2022
-              </a>
+            <div class="flex-shrink-0 ml-0">
+              <img src={filemedisLogo} width="150px" alt="Logo" />
             </div>
 
             {/* <!-- Navigation links --> */}
             <div class="hidden md:block">
               <ul class="flex space-x-4">
                 <li>
-                  <a href="#" class="text-gray-600 hover:text-white">
-                    Home
-                  </a>
-                </li>
-                <li>
-                  <a href="#" class="text-gray-600 hover:text-white">
+                  <a href="#" class="text-gray-600 hover:text-emerald">
                     About Us
                   </a>
                 </li>
                 <li>
-                  <a href="#" class="text-gray-600 hover:text-white">
+                  <a href="#" class="text-gray-600 hover:text-emerald">
                     Services
                   </a>
                 </li>
                 <li>
-                  <a href="#" class="text-gray-600 hover:text-white">
+                  <a href="#" class="text-gray-600 hover:text-emerald">
                     Contact
                   </a>
                 </li>

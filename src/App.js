@@ -5,6 +5,8 @@ import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import Penangangan from "./pages/igd/penangangan";
 import Form from "./pages/form/form";
 import DetailDataRekamMedisPasien from "./pages/rekammedis/detail/DetailDataRekamMedisPasien";
+import Ranap from "./pages/ranap/ranap";
+import Ralan from "./pages/ralan/ralan";
 
 function App() {
   return (
@@ -20,6 +22,8 @@ function App() {
           <Route path="/igd" element={<Igd />} />
           <Route path="/igd/pasien/tangani/:id" element={<Penangangan />} />
           <Route path="/form" element={<Form />} />
+          <Route path="/ranap" element={<Ranap />} />
+          <Route path="/ralan" element={<Ralan />} />
         </Routes>
       </div>
     </BrowserRouter>

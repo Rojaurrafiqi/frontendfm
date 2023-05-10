@@ -26,7 +26,7 @@ const Form_igd = () => {
     <div>
       <div className="container pb-5">
         <div class="flex">
-          <div className="container bg-white m-4 w-1/5 text-left">
+          <div className="container  bg-white m-4 w-1/5 text-left">
             <div class="overflow-x-auto w-full">
               <div className="pl-2 bg-emerald300 font-semibold">Form</div>
               <div className="text-sm">
