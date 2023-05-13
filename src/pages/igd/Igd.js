@@ -11,7 +11,7 @@ const Igd = () => {
           <Sidebar />
         </div>
 
-        <div class="flex-auto h-screen  bg-dasar border-l-2 border-opacity-30 border-gray-300 shadow-md">
+        <div class="flex-auto   bg-dasar border-l-2 border-opacity-30 border-gray-300 shadow-md">
           <Header />
           <div class="container mx-auto 2xl:w-screen px-8   pb-10">
             <Pendaftaran />

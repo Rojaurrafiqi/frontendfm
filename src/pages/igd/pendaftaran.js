@@ -141,8 +141,6 @@ const Pendaftaran = () => {
     setTampilanSearch(false);
   };
 
-  // console.log(listPasienIgdPenanganan);
-
   return (
     <>
       <div className="container border border-state-300 bg-white p-5 mt-5 mb-4 ">
