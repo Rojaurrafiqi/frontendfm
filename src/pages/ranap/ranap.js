@@ -25,7 +25,9 @@ const Ranap = () => {
   const [simpanid, setSimpanId] = useState();
   const [deleteUserId, setDeleteUserId] = useState();
 
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+  const [totalPages, setTotalPages] = useState();
 
   const [allPasienRanap, setAllPasienRanap] = useState([]);
   const [searchQueryPasienRanap, setSearchQueryPasienRanap] = useState("");
@@ -46,17 +48,29 @@ const Ranap = () => {
   useEffect(() => {
     const fetchAllDataPasienRanap = async () => {
       try {
-        const response = await axios.get(
-          `${API_URL}/ranap/pasien/all?search=${searchQueryPasienRanap}&page=${page}&limit=10`
-        );
-        setAllPasienRanap(response.data.data);
+        if (searchQueryPasienRanap !== "") {
+          const response = await axios.get(
+            `${API_URL}/ranap/pasien/all?search=${searchQueryPasienRanap}&page=1&limit=${limit}`
+          );
+          setAllPasienRanap(response.data.data);
+          setTotalPages(response.data.totalPages);
+        } else {
+          const response = await axios.get(
+            `${API_URL}/ranap/pasien/all?search=${searchQueryPasienRanap}&page=${page}&limit=${limit}`
+          );
+          setAllPasienRanap(response.data.data);
+          setTotalPages(response.data.totalPages);
+        }
       } catch (error) {
         console.log(error);
       }
     };
 
     fetchAllDataPasienRanap();
-  }, [searchQueryPasienRanap]);
+  }, [searchQueryPasienRanap, page, limit]);
+
+  console.log(totalPages);
+  console.log(allPasienRanap);
 
   const handleDaftar = () => {
     setIsRegisterPasienRanap(true);
@@ -146,7 +160,6 @@ const Ranap = () => {
     setDeleteUserId(null);
   };
 
-  console.log(page);
   return (
     <div class="h-full">
       <div class="flex">
@@ -338,7 +351,8 @@ const Ranap = () => {
                 <div className="container mx-auto w-full flex justify-end ">
                   <button
                     onClick={() => setPage((page) => page - 1)}
-                    disabled={page === 0}
+                    // disabled={page === 0}
+                    hidden={page === 1}
                     type="button"
                     class="bg-white text-state-400 rounded-l-md border border-black border-l  mr-1"
                   >
@@ -363,7 +377,8 @@ const Ranap = () => {
                     onClick={() => {
                       setPage((page) => page + 1);
                     }}
-                    // disabled={page === data.totalPages - 1}
+                    hidden={page === totalPages}
+                    // disabled={page === totalPages - 1}
                     type="button"
                     class="bg-white text-state-400 border border-black rounded-r-md border-l "
                   >
@@ -389,7 +404,7 @@ const Ranap = () => {
                 <div className="container bg-emerald300 text-left pl-2 mt-3 py-0.5">
                   Daftar Pasien Rawat Inap
                 </div>
-                <div className="overflow-y-auto max-h-[280px]">
+                <div className="overflow-y-auto max-h-[48vh]">
                   <table class="table-auto w-full">
                     <thead className="sticky top-0">
                       <tr>
