@@ -6,6 +6,7 @@ import Modal from "../../component/Modal";
 import { API_URL } from "../../config";
 import axios from "axios";
 import closeIcon from "../../images/close.png";
+import { Link } from "react-router-dom";
 
 const Ranap = () => {
   const navigate = useNavigate();
@@ -13,23 +14,30 @@ const Ranap = () => {
     navigate(-1);
   };
 
+  // modal delete
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  // penyimpanan sementara id delete
+  const [deleteUserId, setDeleteUserId] = useState();
+  // page register pasien
   const [isRegisterPasienRanap, setIsRegisterPasienRanap] = useState(false);
-
+  // search bar
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResult, setSearchResult] = useState([]);
   const [tampilanSearch, setTampilanSearch] = useState(false);
-
+  // penyimpanan data sesuai yang dipilih pada saat search di kolom search register
   const [datapasien, setDataPasien] = useState([]);
+  // post data register
   const [formData, setFormData] = useState({});
   const [simpanid, setSimpanId] = useState();
-  const [deleteUserId, setDeleteUserId] = useState();
 
+  // pagination
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [totalPages, setTotalPages] = useState();
 
+  // retrive all pasien ranap
   const [allPasienRanap, setAllPasienRanap] = useState([]);
+  // kolom pencarian pasien ranap
   const [searchQueryPasienRanap, setSearchQueryPasienRanap] = useState("");
 
   // livesearch
@@ -69,9 +77,6 @@ const Ranap = () => {
     fetchAllDataPasienRanap();
   }, [searchQueryPasienRanap, page, limit]);
 
-  console.log(totalPages);
-  console.log(allPasienRanap);
-
   const handleDaftar = () => {
     setIsRegisterPasienRanap(true);
   };
@@ -80,9 +85,35 @@ const Ranap = () => {
     setIsDeleteOpen(false);
   };
 
+  const handleInputChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
+  const handleSearchPasienRanapChange = (event) => {
+    setSearchQueryPasienRanap(event.target.value);
+  };
+
+  const handleCloseTampilan = () => {
+    setIsRegisterPasienRanap(false);
+  };
+
+  const handleShowModalDelete = (id) => {
+    setIsDeleteOpen(true);
+    setDeleteUserId(id);
+  };
+
+  const handleFormChange = (event) => {
+    setFormData({ ...formData, [event.target.name]: event.target.value });
+  };
+
+  const handleConfirmDelete = () => {
+    handleDeleteUser(deleteUserId);
+    setIsDeleteOpen(false);
+    setDeleteUserId(null);
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
-
     try {
       const response = await axios.get(
         `${API_URL}/igd/pasien?search=${searchQuery}&page=&limit=10`
@@ -93,13 +124,6 @@ const Ranap = () => {
     }
   };
 
-  const handleInputChange = (event) => {
-    setSearchQuery(event.target.value);
-  };
-
-  const handleSearchPasienRanapChange = (event) => {
-    setSearchQueryPasienRanap(event.target.value);
-  };
   const handleklik = (event, id) => {
     event.preventDefault();
     setSearchResult([]);
@@ -112,10 +136,6 @@ const Ranap = () => {
         setSimpanId(parseInt(datak.id));
       })
       .catch((error) => console.log(error));
-  };
-
-  const handleFormChange = (event) => {
-    setFormData({ ...formData, [event.target.name]: event.target.value });
   };
 
   const handleRegisterPasien = async (event) => {
@@ -136,15 +156,6 @@ const Ranap = () => {
     }
   };
 
-  const handleCloseTampilan = () => {
-    setIsRegisterPasienRanap(false);
-  };
-
-  const handleShowModalDelete = (id) => {
-    setIsDeleteOpen(true);
-    setDeleteUserId(id);
-  };
-
   const handleDeleteUser = async (PasienId) => {
     try {
       await axios.delete(`${API_URL}/ranap/pasien/${PasienId}`);
@@ -152,12 +163,6 @@ const Ranap = () => {
       console.error(error);
       alert("Failed to delete user.");
     }
-  };
-
-  const handleConfirmDelete = () => {
-    handleDeleteUser(deleteUserId);
-    setIsDeleteOpen(false);
-    setDeleteUserId(null);
   };
 
   return (
@@ -184,27 +189,30 @@ const Ranap = () => {
               >
                 DAFTAR
               </button>
-              <button
-                className="py-0.2 px-1 mr-1 bg-emerald text-white  hover:opacity-75"
-                type="button"
-                onClick={handleBack}
-              >
-                KAMAR
-              </button>
-              <button
-                className="py-0.2 px-1 mr-1 bg-emerald text-white  hover:opacity-75"
-                type="button"
-                onClick={handleBack}
-              >
-                JADWAL
-              </button>
-              <button
-                className="py-0.2 px-1 mr-1 bg-emerald text-white  hover:opacity-75"
-                type="button"
-                onClick={handleBack}
-              >
-                REPORT
-              </button>
+              <Link to={"/ranap/kamar"}>
+                <button
+                  className="py-0.2 px-1 mr-1 bg-emerald text-white  hover:opacity-75"
+                  type="button"
+                >
+                  KAMAR
+                </button>
+              </Link>
+              <Link to={"/ranap/jadwal"}>
+                <button
+                  className="py-0.2 px-1 mr-1 bg-emerald text-white  hover:opacity-75"
+                  type="button"
+                >
+                  JADWAL
+                </button>
+              </Link>
+              <Link to={"/ranap/report"}>
+                <button
+                  className="py-0.2 px-1 mr-1 bg-emerald text-white  hover:opacity-75"
+                  type="button"
+                >
+                  REPORT
+                </button>
+              </Link>
             </div>
           </div>
 
@@ -351,7 +359,6 @@ const Ranap = () => {
                 <div className="container mx-auto w-full flex justify-end ">
                   <button
                     onClick={() => setPage((page) => page - 1)}
-                    // disabled={page === 0}
                     hidden={page === 1}
                     type="button"
                     class="bg-white text-state-400 rounded-l-md border border-black border-l  mr-1"
@@ -378,7 +385,6 @@ const Ranap = () => {
                       setPage((page) => page + 1);
                     }}
                     hidden={page === totalPages}
-                    // disabled={page === totalPages - 1}
                     type="button"
                     class="bg-white text-state-400 border border-black rounded-r-md border-l "
                   >
@@ -473,12 +479,14 @@ const Ranap = () => {
                               {item.perawat}
                             </td>
                             <td class=" py-0.3 whitespace-nowrap">
-                              <button
-                                className="ml-1 py-0.1 px-1 mr-1 my-0.2 bg-emerald text-white  hover:opacity-75"
-                                type="button"
-                              >
-                                Tangani
-                              </button>
+                              <Link to={`/ranap/pasien/penanganan/${item.id}`}>
+                                <button
+                                  className="ml-1 py-0.1 px-1 mr-1 my-0.2 bg-emerald text-white  hover:opacity-75"
+                                  type="button"
+                                >
+                                  Tangani
+                                </button>
+                              </Link>
                               <button
                                 onClick={() => handleShowModalDelete(item.id)}
                                 className="ml-1 py-0.1 px-1 mr-1 my-0.2 bg-red-600 text-white  hover:opacity-75"
