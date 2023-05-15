@@ -29,6 +29,14 @@ const Kamar = () => {
   // penyimpanan sementara id delete
   const [deleteUserId, setDeleteUserId] = useState();
 
+  // modal tambah data
+  const [isOpen, setIsOpen] = useState(false);
+
+  // form data kamar
+  const [formDataKamar, setFormDataKamar] = useState({});
+  // edit form data kamar
+  const [editFormDataKamar, setEditFormDataKamar] = useState({});
+
   useEffect(() => {
     const fetchDataKamarRanap = async () => {
       try {
@@ -57,6 +65,7 @@ const Kamar = () => {
   const handleFilter = (event) => {
     const selectedValue = event.target.value;
     setFilterData(selectedValue);
+    setPage(1);
   };
 
   const handleCloseModal = () => {
@@ -72,6 +81,34 @@ const Kamar = () => {
     setIsDeleteOpen(false);
     setDeleteUserId(null);
   };
+
+  const handleFormKamarChange = (event) => {
+    setFormDataKamar({
+      ...formDataKamar,
+      [event.target.name]: event.target.value,
+    });
+
+    const { name, value } = event.target;
+    setEditFormDataKamar((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmitDataKamar = async (event) => {
+    event.preventDefault();
+    try {
+      const dataNewKamar = {
+        ...formDataKamar,
+      };
+      const sendData = await axios.post(`${API_URL}/ranap/kamar`, dataNewKamar);
+      setIsOpen(false);
+      setDataKamar({});
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div class="h-full">
       <div class="flex">
@@ -122,6 +159,16 @@ const Kamar = () => {
                 </button>
               </Link>
             </div>
+          </div>
+          <div className="flex my-3 mx-8 justify-end">
+            <button
+              onClick={() => {
+                setIsOpen(true);
+              }}
+              className="py-0.2 px-1 mr-1 bg-emerald text-white  hover:opacity-75"
+            >
+              Tambah Data
+            </button>
           </div>
 
           <div class="container mx-auto 2xl:w-screen px-8 pb-10 ">
@@ -267,6 +314,96 @@ const Kamar = () => {
                 </div>
               </div>
             </div>
+            {/* modal tambah data kamar */}
+            <Modal isOpen={isOpen} onClose={handleCloseModal}>
+              <div class="bg-white rounded-lg w-11/12 overflow-hidden shadow-xl transform transition-all max-w-screen-lg ">
+                <div class="flex justify-between px-4 py-2">
+                  <h3 className="text-lg leading-6 font-medium text-gray-900 text-left">
+                    Tambah Data Kamar
+                  </h3>
+                  <button
+                    class="text-gray-600 hover:text-gray-800 focus:outline-none"
+                    onClick={handleCloseModal}
+                  >
+                    <svg class="h-6 w-6 fill-current" viewBox="0 0 20 20">
+                      <path
+                        fill-rule="evenodd"
+                        d="M5.293 5.293a1 1 0 011.414 0L10 8.586l3.293-3.293a1 1 0 111.414 1.414L11.414 10l3.293 3.293a1 1 0 01-1.414 1.414L10 11.414l-3.293 3.293a1 1 0 01-1.414-1.414L8.586 10 5.293 6.707a1 1 0 010-1.414z"
+                        clip-rule="evenodd"
+                      ></path>
+                    </svg>
+                  </button>
+                </div>
+
+                <form onSubmit={handleSubmitDataKamar}>
+                  <div class="bg-gray-50 p-6">
+                    <div class="flex flex-col md:flex-row">
+                      <div class="w-full  px-4 mb-4 md:mb-0">
+                        <div className="field">
+                          <label className="block text-gray-700 text-sm text-left font-bold mb-2">
+                            No Kamar
+                          </label>
+                          <input
+                            class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            name="no_kamar"
+                            type="text"
+                            placeholder="No Kamar"
+                            onChange={handleFormKamarChange}
+                          />
+                        </div>
+                        <div className="field"></div>
+                        <div className="field">
+                          <label className="block text-gray-700 text-sm text-left font-bold mb-2">
+                            No Bad
+                          </label>
+                          <input
+                            class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            name="no_bad"
+                            type="text"
+                            placeholder="No Bad"
+                            onChange={handleFormKamarChange}
+                          />
+                        </div>
+                        <div className="field">
+                          <label className="block text-gray-700 text-sm text-left font-bold mb-2">
+                            Tipe Kamar
+                          </label>
+                          <input
+                            class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            name="tipe_kamar"
+                            type="text"
+                            placeholder="Tipe Kamar"
+                            onChange={handleFormKamarChange}
+                          />
+                        </div>
+                        <div className="field">
+                          <label className="block text-gray-700 text-sm text-left font-bold mb-2">
+                            Status Kamar
+                          </label>
+                          <input
+                            class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            name="status_kamar"
+                            type="text"
+                            placeholder="Status Kamar"
+                            onChange={handleFormKamarChange}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="bg-gray-100 p-4 flex justify-end">
+                    <button
+                      type="submit"
+                      class="px-4 py-2 bg-emerald hover:opacity-75 text-white rounded-md  focus:outline-none focus:ring-2 focus:ring-gray-600 focus:ring-opacity-50"
+                      onclick="toggleModal()"
+                    >
+                      Submit
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </Modal>
+
             {/* modal delete pasien ranap */}
             <Modal isOpen={isDeleteOpen} onClose={handleCloseModal}>
               <div class="bg-white rounded-lg w-1/3 mt-10 overflow-hidden shadow-xl transform transition-all max-w-screen-lg ">

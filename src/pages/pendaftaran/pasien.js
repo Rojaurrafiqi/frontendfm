@@ -9,6 +9,7 @@ import deleteIcon from "../../images/delete.png";
 import detailIcon from "../../images/detail.png";
 import closeIcon from "../../images/close.png";
 import { Link } from "react-router-dom";
+import { API_URL } from "../../config";
 
 const Pasien = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -377,7 +378,7 @@ const Pasien = () => {
         alamat_pj_desa: pjSelectedDesa,
         alamat_pj_detail: pjdetail,
       };
-      const response = await axios.post("http://localhost:5000/rm", dataToSend);
+      const response = await axios.post(`${API_URL}/rm`, dataToSend);
 
       // setIsOpen(false);
       resetModal();
@@ -474,10 +475,9 @@ const Pasien = () => {
         status_kawin: editStatusKawin,
       };
       const response = await axios.patch(
-        `http://localhost:5000/rm/${editData.id}`,
+        `${API_URL}rm/${editData.id}`,
         updatedData
       );
-      // console.log(response.data);
       setIsEditOpen(false);
       mutate();
     } catch (error) {
