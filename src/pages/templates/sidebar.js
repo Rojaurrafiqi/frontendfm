@@ -44,9 +44,9 @@ const Sidebar = () => {
             </Link>
           </div>
           <div className="flex flex-col items-center justify-center">
-            <Link to={"/apotek"} rel="noopener noreferrer">
+            <Link to={"/farmasi/penjualan"} rel="noopener noreferrer">
               <img src={apotekLogo} width="33" className="mx-auto" />
-              <p className="text-xs text-center">APOTEK</p>
+              <p className="text-xs text-center">FARMASI</p>
             </Link>
           </div>
           <div className="flex flex-col items-center justify-center">
