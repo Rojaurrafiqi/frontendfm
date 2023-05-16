@@ -19,6 +19,7 @@ const Kamar = () => {
   };
 
   const [dataKamar, setDataKamar] = useState({});
+  const [tipeKamar, setTipeKamar] = useState([]);
   const [filterData, setFilterData] = useState("");
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
@@ -36,6 +37,7 @@ const Kamar = () => {
   const [formDataKamar, setFormDataKamar] = useState({});
   // edit form data kamar
   const [editFormDataKamar, setEditFormDataKamar] = useState({});
+  const [selectTipeData, setSelectTipeData] = useState();
 
   useEffect(() => {
     const fetchDataKamarRanap = async () => {
@@ -52,6 +54,19 @@ const Kamar = () => {
 
     fetchDataKamarRanap();
   }, [dataKamar, filterData, page, totalPages]);
+
+  const fetchTipeKamarRanap = async () => {
+    try {
+      const tipeDataKamar = await axios.get(`${API_URL}/ranap/kamar/tipe`);
+      setTipeKamar(tipeDataKamar.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchTipeKamarRanap();
+  }, [tipeKamar]);
 
   const handleDeleteUser = async (PasienId) => {
     try {
@@ -70,6 +85,7 @@ const Kamar = () => {
 
   const handleCloseModal = () => {
     setIsDeleteOpen(false);
+    setIsOpen(false);
   };
 
   const handleShowModalDelete = (id) => {
@@ -100,6 +116,8 @@ const Kamar = () => {
     try {
       const dataNewKamar = {
         ...formDataKamar,
+        tipe_kamar: selectTipeData,
+        status_kamar: "available",
       };
       const sendData = await axios.post(`${API_URL}/ranap/kamar`, dataNewKamar);
       setIsOpen(false);
@@ -107,6 +125,11 @@ const Kamar = () => {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const handleSelectTipeKamar = (event) => {
+    const data = event.target.value;
+    setSelectTipeData(data);
   };
 
   return (
@@ -181,7 +204,7 @@ const Kamar = () => {
                   >
                     <option value="">All Data</option>
                     <option value="available">Available</option>
-                    <option value="booked">Booking</option>
+                    <option value="occupied">Occupied</option>
                   </select>
                 </div>
                 <div className="container mx-auto w-full flex justify-end ">
@@ -284,6 +307,7 @@ const Kamar = () => {
                             </td>
 
                             <td class=" py-0.3 whitespace-nowrap">
+                              {/* button booking automatis dari kamar dan langsung di redirect ke registrasi pasien di hide dulu, dibuka ketika ada permintaan dari rs, dan button ini sementara waktu blm aktif
                               <Link to={`/ranap/pasien/penanganan/${item.id}`}>
                                 <button
                                   className="ml-1 py-0.1 px-1 mr-1 my-0.2 bg-emerald text-white  hover:opacity-75"
@@ -291,7 +315,7 @@ const Kamar = () => {
                                 >
                                   Booking
                                 </button>
-                              </Link>
+                              </Link> */}
                               <button
                                 onClick={() => handleShowModalDelete(item.id)}
                                 className="ml-1 py-0.1 px-1 mr-1 my-0.2 bg-red-600 text-white  hover:opacity-75"
@@ -368,25 +392,15 @@ const Kamar = () => {
                           <label className="block text-gray-700 text-sm text-left font-bold mb-2">
                             Tipe Kamar
                           </label>
-                          <input
-                            class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                          <select
+                            onChange={handleSelectTipeKamar}
                             name="tipe_kamar"
-                            type="text"
-                            placeholder="Tipe Kamar"
-                            onChange={handleFormKamarChange}
-                          />
-                        </div>
-                        <div className="field">
-                          <label className="block text-gray-700 text-sm text-left font-bold mb-2">
-                            Status Kamar
-                          </label>
-                          <input
-                            class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            name="status_kamar"
-                            type="text"
-                            placeholder="Status Kamar"
-                            onChange={handleFormKamarChange}
-                          />
+                            className="block appearance-none border  w-full py-2 px-3 text-gray-700  rounded  focus:outline-none focus:bg-white focus:border-gray-500"
+                          >
+                            {tipeKamar.map((item) => (
+                              <option value={item.tipe}>{item.tipe}</option>
+                            ))}
+                          </select>
                         </div>
                       </div>
                     </div>

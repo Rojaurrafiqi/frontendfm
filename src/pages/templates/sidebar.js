@@ -6,6 +6,7 @@ import rekamMedisLogo from "../../images/rekammedis.png";
 import ralanLogo from "../../images/ralan.png";
 import igdLogo from "../../images/igd.png";
 import menuLogo from "../../images/menu.png";
+import apotekLogo from "../../images/apotek.png";
 import { Link } from "react-router-dom";
 
 const Sidebar = () => {
@@ -18,34 +19,40 @@ const Sidebar = () => {
         </div>
 
         <div className=" flex flex-col items-center space-y-2">
-          <div className="container flex flex-col items-center">
+          <div className="flex flex-col items-center justify-center">
             <Link to={"/pasien"} rel="noopener noreferrer" href="#">
-              <img src={rekamMedisLogo} width="38" />
-              <p className="text-xs">PASIEN</p>
+              <img src={rekamMedisLogo} width="38" className="mx-auto" />
+              <p className="text-xs text-center">PASIEN</p>
             </Link>
           </div>
-          <div className="container flex flex-col items-center">
+          <div className="flex flex-col items-center justify-center">
             <Link to={"/igd"} rel="noopener noreferrer" href="#">
-              <img src={igdLogo} width="33" />
-              <p className="text-xs">IGD</p>
+              <img src={igdLogo} width="33" className="mx-auto" />
+              <p className="text-xs text-center">IGD</p>
             </Link>
           </div>
-          <div className="container flex flex-col items-center">
+          <div className="flex flex-col items-center justify-center">
             <Link to={"/ralan"} rel="noopener noreferrer">
-              <img src={ralanLogo} width="33" />
-              <p className="text-xs">RALAN</p>
+              <img src={ralanLogo} width="33" className="mx-auto" />
+              <p className="text-xs text-center">RALAN</p>
             </Link>
           </div>
-          <div className="container flex flex-col items-center">
+          <div className="flex flex-col items-center justify-center">
             <Link to={"/ranap"} rel="noopener noreferrer">
-              <img src={ranapLogo} width="33" />
-              <p className="text-xs">RANAP</p>
+              <img src={ranapLogo} width="33" className="mx-auto" />
+              <p className="text-xs text-center">RANAP</p>
             </Link>
           </div>
-          <div className="container flex flex-col items-center">
+          <div className="flex flex-col items-center justify-center">
+            <Link to={"/apotek"} rel="noopener noreferrer">
+              <img src={apotekLogo} width="33" className="mx-auto" />
+              <p className="text-xs text-center">APOTEK</p>
+            </Link>
+          </div>
+          <div className="flex flex-col items-center justify-center">
             <Link to={"/form"} rel="noopener noreferrer" href="#">
-              <img src={formLogo} width="38" />
-              <p className="text-xs">FORM</p>
+              <img src={formLogo} width="38" className="mx-auto" />
+              <p className="text-xs text-center">FORM</p>
             </Link>
           </div>
         </div>

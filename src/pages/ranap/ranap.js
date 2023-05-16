@@ -40,6 +40,16 @@ const Ranap = () => {
   // kolom pencarian pasien ranap
   const [searchQueryPasienRanap, setSearchQueryPasienRanap] = useState("");
 
+  // retrive data kamar available
+  const [kamarAvailable, setKamarAvailable] = useState([]);
+
+  // no kamar yang dipilih saat pendaftaran ranap
+  const [noKamar, setNoKamar] = useState("");
+  // no bad yang dipilih saat pendaftaran ranap
+  const [noBad, setNoBad] = useState("");
+  // id kamar ranap untuk perubahan status kamar menjadi occupied
+  const [idKamarRanap, setIdKamarRanap] = useState();
+
   // livesearch
   useEffect(() => {
     if (searchQuery !== "") {
@@ -75,7 +85,7 @@ const Ranap = () => {
     };
 
     fetchAllDataPasienRanap();
-  }, [searchQueryPasienRanap, page, limit]);
+  }, [searchQueryPasienRanap, page, allPasienRanap, limit]);
 
   const handleDaftar = () => {
     setIsRegisterPasienRanap(true);
@@ -124,6 +134,31 @@ const Ranap = () => {
     }
   };
 
+  // untuk mengambil data kamar available dari api dan di render di useEffect
+  const fetchKamarAvailable = async () => {
+    try {
+      const response = await axios.get(
+        `${API_URL}/ranap/pasien/register/kamar/available`
+      );
+      setKamarAvailable(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchKamarAvailable();
+  }, [kamarAvailable]);
+
+  // menangkap perubahan kamar pada form register dan id yang dikirimkan untuk update status kamar di db kamar_ranap
+  const handleSelectKamarAvailable = (event) => {
+    const data = event.target.value;
+    const [noKamar, noBad, idKamar] = data.split(",");
+    setNoKamar(noKamar);
+    setNoBad(noBad);
+    setIdKamarRanap(Number(idKamar));
+  };
+
   const handleklik = (event, id) => {
     event.preventDefault();
     setSearchResult([]);
@@ -143,12 +178,21 @@ const Ranap = () => {
     const dataToSend = {
       ...formData,
       id_pasien_rm: simpanid,
+      no_kamar: noKamar,
+      no_bad: noBad,
+    };
+    const statusKamar = {
+      status_kamar: "occupied",
     };
     try {
-      const response = await axios.post(
-        `${API_URL}/ranap/pasien/register`,
-        dataToSend
-      );
+      const [response1, response2] = await Promise.all([
+        axios.post(`${API_URL}/ranap/pasien/register`, dataToSend),
+        axios.patch(
+          `${API_URL}/ranap/kamar/status/${idKamarRanap}`,
+          statusKamar
+        ),
+      ]);
+
       setTampilanSearch(false);
       setIsRegisterPasienRanap(false);
     } catch (error) {
@@ -286,14 +330,22 @@ const Ranap = () => {
                             </td>
                           </tr>
                           <tr>
-                            <td className="pr-1">No Kamar</td>
+                            <td className="pr-1">Kamar</td>
                             <td className="pb-1">
-                              <input
-                                type="text"
-                                name="no_kamar"
-                                onChange={handleFormChange}
-                                className="border border-black ml-1 mx-28  pl-0.5 py-0.4 w-full"
-                              />
+                              <select
+                                onChange={handleSelectKamarAvailable}
+                                name="tipe_kamar"
+                                className="block  border border-black mx-28 ml-1 pl-0.5 py-0.4 w-full"
+                              >
+                                {kamarAvailable.map((item) => (
+                                  <option
+                                    value={`${item.no_kamar},${item.no_bad}, ${item.id}`}
+                                  >
+                                    Kamar no {item.no_kamar} & Bad no
+                                    {item.no_bad}
+                                  </option>
+                                ))}
+                              </select>
                             </td>
                           </tr>
                           <tr>
@@ -467,7 +519,7 @@ const Ranap = () => {
                               {item.no_kamar}
                             </td>
                             <td className="class=py-0.3 px-6 whitespace-nowrap">
-                              01
+                              {item.no_bad}
                             </td>
                             <td className="class=py-0.3 px-6 whitespace-nowrap">
                               {item.tanggal_masuk}

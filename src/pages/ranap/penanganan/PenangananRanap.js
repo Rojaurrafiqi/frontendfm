@@ -65,6 +65,7 @@ const PenangananRanap = () => {
                 >
                   KEMBALI
                 </button>
+                {/* ketika di checkout maka update juga status kamar menjadi available kembali */}
                 <button
                   onClick={handleCheckout}
                   className="py-0.2 px-1 mr-1 bg-emerald text-white  hover:opacity-75"
