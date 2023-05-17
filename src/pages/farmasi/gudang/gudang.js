@@ -6,7 +6,8 @@ import Modal from "../../../component/Modal";
 import { API_URL } from "../../../config";
 import axios from "axios";
 import closeIcon from "../../../images/close.png";
-import { Link } from "react-router-dom";
+import { Link, Route, Routes } from "react-router-dom";
+import DataObat from "./DataObat";
 
 const Gudang = () => {
   const navigate = useNavigate();
@@ -69,7 +70,7 @@ const Gudang = () => {
           <div class="container mx-auto 2xl:w-screen px-8 pb-10">
             <div className="container border border-state-300 bg-white p-2 mt-5 ">
               <div className="flex justify-end mb-4">
-                <Link to={"/farmasi/penjualan"}>
+                <Link to={"/farmasi/obat/data"}>
                   <button
                     className="py-0.2 text-sm  px-1 mr-1 bg-white border text-black border-black  hover:bg-emerald300"
                     type="button"

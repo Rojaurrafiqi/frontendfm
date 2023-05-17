@@ -47,7 +47,7 @@ const PageFarmasi = () => {
                   RESEP
                 </button>
               </Link>
-              <Link to={"/farmasi/gudang"}>
+              <Link to={"/farmasi/obat/data"}>
                 <button
                   className="py-0.2 px-1 mr-1 bg-emerald text-white  hover:opacity-75"
                   type="button"

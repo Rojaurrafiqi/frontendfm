@@ -1,7 +1,7 @@
 import "./App.css";
 import Rekammedis from "./pages/rekammedis/Rekammedis.js";
 import Igd from "./pages/igd/Igd.js";
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import PenanganganIgd from "./pages/igd/penangangan";
 import Form from "./pages/form/form";
 import DetailDataRekamMedisPasien from "./pages/rekammedis/detail/DetailDataRekamMedisPasien";
@@ -15,6 +15,8 @@ import Penjualan from "./pages/farmasi/penjualan/penjualan";
 import Resep from "./pages/farmasi/resep/resep";
 import Gudang from "./pages/farmasi/gudang/gudang";
 import ReportFarmasi from "./pages/farmasi/report/report";
+import DataObat from "./pages/farmasi/gudang/DataObat";
+import StokObat from "./pages/farmasi/gudang/StokObat";
 
 function App() {
   return (
@@ -44,7 +46,8 @@ function App() {
           {/* farmasi */}
           <Route path="/farmasi/penjualan" element={<Penjualan />} />
           <Route path="/farmasi/resep" element={<Resep />} />
-          <Route path="/farmasi/gudang" element={<Gudang />} />
+          <Route path="/farmasi/obat/data" element={<DataObat />} />
+          <Route path="/farmasi/obat/stok" element={<StokObat />} />
           <Route path="/farmasi/report" element={<ReportFarmasi />} />
         </Routes>
       </div>

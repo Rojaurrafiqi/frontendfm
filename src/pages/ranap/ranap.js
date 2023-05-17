@@ -107,15 +107,14 @@ const Ranap = () => {
     setIsRegisterPasienRanap(false);
   };
 
-  const handleShowModalDelete = (id) => {
-    setIsDeleteOpen(true);
-    setDeleteUserId(id);
-  };
-
   const handleFormChange = (event) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
   };
 
+  const handleShowModalDelete = (id) => {
+    setIsDeleteOpen(true);
+    setDeleteUserId(id);
+  };
   const handleConfirmDelete = () => {
     handleDeleteUser(deleteUserId);
     setIsDeleteOpen(false);
@@ -503,31 +502,31 @@ const Ranap = () => {
                       {allPasienRanap.length > 0 ? (
                         allPasienRanap.map((item, index) => (
                           <tr key={item.id}>
-                            <td className="class=py-0.3 px-6 whitespace-nowrap">
+                            <td className="py-0.3 px-6 whitespace-nowrap">
                               {index + 1}
                             </td>
-                            <td className="class=py-0.3 px-6 whitespace-nowrap">
+                            <td className="py-0.3 px-6 whitespace-nowrap">
                               {item.pasien_rm.no_rm}
                             </td>
-                            <td className="class=py-0.3 px-6 whitespace-nowrap">
+                            <td className="py-0.3 px-6 whitespace-nowrap">
                               {item.pasien_rm.nama_lengkap}
                             </td>
-                            <td className="class=py-0.3 px-6 whitespace-nowrap">
+                            <td className="py-0.3 px-6 whitespace-nowrap">
                               {item.pasien_rm.kelamin}
                             </td>
-                            <td className="class=py-0.3 px-6 whitespace-nowrap">
+                            <td className="py-0.3 px-6 whitespace-nowrap">
                               {item.no_kamar}
                             </td>
-                            <td className="class=py-0.3 px-6 whitespace-nowrap">
+                            <td className="py-0.3 px-6 whitespace-nowrap">
                               {item.no_bad}
                             </td>
-                            <td className="class=py-0.3 px-6 whitespace-nowrap">
+                            <td className="py-0.3 px-6 whitespace-nowrap">
                               {item.tanggal_masuk}
                             </td>
-                            <td className="class=py-0.3 px-6 whitespace-nowrap">
+                            <td className="py-0.3 px-6 whitespace-nowrap">
                               {item.dokter}
                             </td>
-                            <td className="class=py-0.3 px-6 whitespace-nowrap">
+                            <td className="py-0.3 px-6 whitespace-nowrap">
                               {item.perawat}
                             </td>
                             <td class=" py-0.3 whitespace-nowrap">
