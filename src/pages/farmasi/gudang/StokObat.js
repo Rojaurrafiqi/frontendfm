@@ -5,7 +5,8 @@ import { useNavigate } from "react-router-dom";
 import Modal from "../../../component/Modal";
 import { API_URL } from "../../../config";
 import axios from "axios";
-import { Link, Route, Routes } from "react-router-dom";
+import { Link } from "react-router-dom";
+import Select from "react-select";
 
 const StokObat = () => {
   const navigate = useNavigate();
@@ -39,20 +40,24 @@ const StokObat = () => {
   // edit form data obat
   const [editFormStokObat, setEditFormStokObat] = useState({});
 
+  // select with search
+  const [isClearable, setIsClearable] = useState(true);
+  const [isSearchable, setIsSearchable] = useState(true);
+
   //all pasien ranap
   useEffect(() => {
     const fetchAllStokObat = async () => {
       try {
         if (searchQueryStokObat !== "") {
           const response = await axios.get(
-            `${API_URL}/farmasi/obat/stok?search=${searchQueryStokObat}&page=1&limit=${limit}`
+            `${API_URL}/farmasi/stok/obat?search=${searchQueryStokObat}&page=1&limit=${limit}`
           );
           setStokObat(response.data.data);
           setTotalPages(response.data.totalPages);
           console.log(response);
         } else {
           const response = await axios.get(
-            `${API_URL}/farmasi/obat/stok?search=${searchQueryStokObat}&page=${page}&limit=${limit}`
+            `${API_URL}/farmasi/stok/obat?search=${searchQueryStokObat}&page=${page}&limit=${limit}`
           );
           setStokObat(response.data.data);
           setTotalPages(response.data.totalPages);
@@ -64,6 +69,34 @@ const StokObat = () => {
 
     fetchAllStokObat();
   }, [searchQueryStokObat, page, stokObat, limit]);
+
+  // show select nama obat dari database obat
+  const [namaObat, setNamaObat] = useState([]);
+  const [selectedOption, setSelectedOption] = useState([]);
+
+  const handleSelectChange = (selectedOption) => {
+    setSelectedOption(selectedOption);
+  };
+
+  const fetchNamaObat = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/farmasi/obat/nama`);
+      const data = response.data;
+
+      const mapped = data.map((item) => ({
+        value: item.id,
+        label: item.nama_obat,
+      }));
+
+      setNamaObat(mapped);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchNamaObat();
+  }, [namaObat]);
 
   const handleCloseModal = () => {
     setIsDeleteOpen(false);
@@ -89,7 +122,7 @@ const StokObat = () => {
 
   const handleDeleteStokObat = async (PasienId) => {
     try {
-      await axios.delete(`${API_URL}/farmasi/obat/stok/${PasienId}`);
+      await axios.delete(`${API_URL}/farmasi/stok/obat/${PasienId}`);
     } catch (error) {
       console.error(error);
       alert("Failed to delete data.");
@@ -113,9 +146,10 @@ const StokObat = () => {
     try {
       const dataNewObat = {
         ...formStokObat,
+        id_obat: selectedOption.value,
       };
       const sendData = await axios.post(
-        `${API_URL}/farmasi/obat/stok`,
+        `${API_URL}/farmasi/stok/obat`,
         dataNewObat
       );
       setIsOpen(false);
@@ -131,7 +165,7 @@ const StokObat = () => {
         ...dataById,
       };
       const sendData = await axios.patch(
-        `${API_URL}/farmasi/obat/stok/${idObat}`,
+        `${API_URL}/farmasi/stok/obat/${idObat}`,
         dataNewObatEdit
       );
       setIsEditOpen(false);
@@ -153,7 +187,7 @@ const StokObat = () => {
   const fetchStokObatById = async (idObatParse) => {
     try {
       const response = await axios.get(
-        `${API_URL}/farmasi/obat/stok/${idObatParse}`
+        `${API_URL}/farmasi/stok/obat/${idObatParse}`
       );
       setDataById(response.data);
     } catch (error) {
@@ -321,7 +355,7 @@ const StokObat = () => {
               </div>
               <div class="overflow-x-auto mb-5 ">
                 <div className="container bg-emerald300 text-left pl-2 mt-3 py-0.5">
-                  Data Obat
+                  Data Ketersediaan Obat
                 </div>
                 <div className="overflow-y-auto max-h-[48vh]">
                   <table class="table-auto w-full">
@@ -334,13 +368,19 @@ const StokObat = () => {
                           Nama Obat
                         </th>
                         <th class="px-6 py-3 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Kategori
+                          Jumlah Stok
                         </th>
                         <th class="px-6 py-3 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Dosis Obat
+                          Tanggal Kadaluarsa
                         </th>
                         <th class="px-6 py-3 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Cara Penggunaan
+                          Tanggal Penerimaan
+                        </th>
+                        <th class="px-6 py-3 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Lokasi Penyimpanan
+                        </th>
+                        <th class="px-6 py-3 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Status
                         </th>
                         <th class="px-6 py-3 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                           Aksi
@@ -356,29 +396,26 @@ const StokObat = () => {
                               {index + 1}
                             </td>
                             <td className="py-0.3 px-6 whitespace-nowrap">
-                              {item.id}
+                              {item.obat_data.nama_obat}
                             </td>
-                            {/* <td className="py-0.3 px-6 whitespace-nowrap">
-                              {item.kategori_obat}
+                            <td className="py-0.3 px-6 whitespace-nowrap">
+                              {item.jumlah_stok}
                             </td>
 
                             <td className="py-0.3 px-6 whitespace-nowrap">
-                              {item.dosis_obat}
+                              {item.tanggal_kadaluarsa}
                             </td>
                             <td className="py-0.3 px-6 whitespace-nowrap">
-                              {item.instruksi_penggunaan}
-                            </td> */}
+                              {item.tanggal_penerimaan}
+                            </td>
+                            <td className="py-0.3 px-6 whitespace-nowrap">
+                              {item.lokasi_penyimpanan}
+                            </td>
+                            <td className="py-0.3 px-6 whitespace-nowrap">
+                              {item.status_stok}
+                            </td>
 
                             <td class=" py-0.3 whitespace-nowrap">
-                              <Link to={`/ranap/pasien/penanganan/${item.id}`}>
-                                <button
-                                  className="ml-1 py-0.1 px-1 mr-1 my-0.2 bg-emerald text-white  hover:opacity-75"
-                                  type="button"
-                                >
-                                  Detail
-                                </button>
-                              </Link>
-
                               <button
                                 onClick={() => handleEditStokObat(item.id)}
                                 className="ml-1 py-0.1 px-1 mr-1 my-0.2 bg-emerald text-white  hover:opacity-75"
@@ -472,20 +509,24 @@ const StokObat = () => {
                         <label className="block text-gray-700 text-sm text-left font-bold mb-1">
                           Nama Obat
                         </label>
-                        <input
-                          class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        <Select
+                          options={namaObat}
+                          value={selectedOption}
+                          onChange={handleSelectChange}
+                          placeholder="Pilih obat"
+                          className="text-left"
                           name="nama_obat"
-                          type="text"
-                          onChange={handleFormStokObatChange}
+                          isClearable
+                          isSearchable
                         />
                       </div>
                       <div className="field">
                         <label className="block text-gray-700 text-sm text-left font-bold mb-1">
-                          Kategori Obat
+                          Jumlah Stok
                         </label>
                         <input
                           class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                          name="kategori_obat"
+                          name="jumlah_stok"
                           type="text"
                           onChange={handleFormStokObatChange}
                         />
@@ -493,23 +534,35 @@ const StokObat = () => {
 
                       <div className="field">
                         <label className="block text-gray-700 text-sm text-left font-bold mb-1">
-                          Dosis Obat
+                          Stok Minimal
                         </label>
                         <input
                           class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                          name="dosis_obat"
+                          name="batas_minimum_stok"
                           type="text"
+                          onChange={handleFormStokObatChange}
+                        />
+                      </div>
+
+                      <div className="field">
+                        <label className="block text-gray-700 text-sm text-left font-bold mb-1">
+                          Tanggal Kadaluarsa
+                        </label>
+                        <input
+                          class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                          name="tanggal_kadaluarsa"
+                          type="date"
                           onChange={handleFormStokObatChange}
                         />
                       </div>
                       <div className="field">
                         <label className="block text-gray-700 text-sm text-left font-bold mb-1">
-                          Efek Samping
+                          Tanggal Penerimaan
                         </label>
                         <input
                           class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                          name="efek_samping"
-                          type="text"
+                          name="tanggal_penerimaan"
+                          type="date"
                           onChange={handleFormStokObatChange}
                         />
                       </div>
@@ -517,36 +570,25 @@ const StokObat = () => {
                     <div class="w-full  px-4 mb-4 md:mb-0">
                       <div className="field">
                         <label className="block text-gray-700 text-sm text-left font-bold mb-1">
-                          Peringatan
+                          Lokasi Penyimpanan
                         </label>
                         <input
                           class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                          name="peringatan"
+                          name="lokasi_penyimpanan"
                           type="text"
                           onChange={handleFormStokObatChange}
                         />
                       </div>
                       <div className="field">
                         <label className="block text-gray-700 text-sm text-left font-bold mb-1">
-                          Instruksi Penggunaan
+                          Status
                         </label>
                         <input
                           class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                           type="text"
-                          name="instruksi_penggunaan"
+                          name="status_stok"
                           onChange={handleFormStokObatChange}
                         />
-                      </div>
-                      <div className="field">
-                        <label className="block text-gray-700 text-sm text-left font-bold mb-1">
-                          Deskripsi Obat
-                        </label>
-                        <textarea
-                          class="w-full px-4 py-2 text-gray-700 border rounded-lg focus:outline-none focus:border-blue-500 resize-none"
-                          rows="4"
-                          name="deskripsi_obat"
-                          onChange={handleFormStokObatChange}
-                        ></textarea>
                       </div>
                     </div>
                   </div>
@@ -593,48 +635,39 @@ const StokObat = () => {
                         <label className="block text-gray-700 text-sm text-left font-bold mb-1">
                           Nama Obat
                         </label>
-                        <input
-                          class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        <Select
+                          options={namaObat}
+                          value={selectedOption}
+                          onChange={handleSelectChange}
+                          placeholder="Pilih obat"
+                          className="text-left"
                           name="nama_obat"
-                          value={dataById.nama_obat}
-                          type="text"
-                          onChange={handleFormStokObatChange}
+                          isClearable
+                          isSearchable
                         />
                       </div>
                       <div className="field">
                         <label className="block text-gray-700 text-sm text-left font-bold mb-1">
-                          Kategori Obat
+                          Jumlah Stok
                         </label>
                         <input
                           class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                          value={dataById.kategori_obat}
-                          name="kategori_obat"
+                          name="jumlah_stok"
                           type="text"
+                          value={dataById.jumlah_stok}
                           onChange={handleFormStokObatChange}
                         />
                       </div>
 
                       <div className="field">
                         <label className="block text-gray-700 text-sm text-left font-bold mb-1">
-                          Dosis Obat
+                          Stok Minimal
                         </label>
                         <input
-                          value={dataById.dosis_obat}
                           class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                          name="dosis_obat"
+                          name="batas_minimum_stok"
                           type="text"
-                          onChange={handleFormStokObatChange}
-                        />
-                      </div>
-                      <div className="field">
-                        <label className="block text-gray-700 text-sm text-left font-bold mb-1">
-                          Efek Samping
-                        </label>
-                        <input
-                          value={dataById.efek_samping}
-                          class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                          name="efek_samping"
-                          type="text"
+                          value={dataById.batas_minimum_stok}
                           onChange={handleFormStokObatChange}
                         />
                       </div>
@@ -642,39 +675,39 @@ const StokObat = () => {
                     <div class="w-full  px-4 mb-4 md:mb-0">
                       <div className="field">
                         <label className="block text-gray-700 text-sm text-left font-bold mb-1">
-                          Peringatan
+                          Tanggal Kadaluarsa
                         </label>
                         <input
-                          value={dataById.peringatan}
                           class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                          name="peringatan"
-                          type="text"
+                          name="tanggal_kadaluarsa"
+                          type="date"
+                          value={dataById.tanggal_kadaluarsa}
                           onChange={handleFormStokObatChange}
                         />
                       </div>
                       <div className="field">
                         <label className="block text-gray-700 text-sm text-left font-bold mb-1">
-                          Instruksi Penggunaan
+                          Tanggal Penerimaan
                         </label>
                         <input
-                          value={dataById.instruksi_penggunaan}
                           class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                          type="text"
-                          name="instruksi_penggunaan"
+                          name="tanggal_penerimaan"
+                          type="date"
+                          value={dataById.tanggal_penerimaan}
                           onChange={handleFormStokObatChange}
                         />
                       </div>
                       <div className="field">
                         <label className="block text-gray-700 text-sm text-left font-bold mb-1">
-                          Deskripsi Obat
+                          Lokasi Penyimpanan
                         </label>
-                        <textarea
-                          class="w-full px-4 py-2 text-gray-700 border rounded-lg focus:outline-none focus:border-blue-500 resize-none"
-                          rows="4"
-                          value={dataById.deskripsi_obat}
-                          name="deskripsi_obat"
+                        <input
+                          class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                          name="lokasi_penyimpanan"
+                          type="text"
+                          value={dataById.lokasi_penyimpanan}
                           onChange={handleFormStokObatChange}
-                        ></textarea>
+                        />
                       </div>
                     </div>
                   </div>
