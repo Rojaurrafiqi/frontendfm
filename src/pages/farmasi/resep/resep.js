@@ -5,8 +5,7 @@ import { useNavigate } from "react-router-dom";
 import Modal from "../../../component/Modal";
 import { API_URL } from "../../../config";
 import axios from "axios";
-import closeIcon from "../../../images/close.png";
-import { Link } from "react-router-dom";
+import MenuFarmasi from "../component/MenuFarmasi";
 
 const Resep = () => {
   const navigate = useNavigate();
@@ -20,10 +19,11 @@ const Resep = () => {
   const [totalPages, setTotalPages] = useState();
 
   // menyimpan data obat untuk di looping
-  const [stokObat, setStokObat] = useState({});
+  const [resepObat, setResepObat] = useState({});
 
   // search
-  const [searchQueryStokObat, setSearchQueryStokObat] = useState("");
+  const [searchQueryResepObat, setSearchQueryResepObat] = useState("");
+  const [filterResepObat, setFilterResepObat] = useState("antrian");
 
   // modal delete
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
@@ -35,27 +35,26 @@ const Resep = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   // form data obat
-  const [formStokObat, setFormStokObat] = useState({});
+  const [formResepObat, setFormResepObat] = useState({});
 
   // edit form data obat
-  const [editFormStokObat, setEditFormStokObat] = useState({});
+  const [editFormResepObat, setEditFormResepObat] = useState({});
 
   //all pasien ranap
   useEffect(() => {
-    const fetchAllStokObat = async () => {
+    const fetchResepObat = async () => {
       try {
-        if (searchQueryStokObat !== "") {
+        if (searchQueryResepObat !== "") {
           const response = await axios.get(
-            `${API_URL}/farmasi/stok/obat?search=${searchQueryStokObat}&page=1&limit=${limit}`
+            `${API_URL}/farmasi/resep/obat?search=${searchQueryResepObat}&page=1&limit=${limit}`
           );
-          setStokObat(response.data.data);
+          setResepObat(response.data.data);
           setTotalPages(response.data.totalPages);
-          console.log(response);
         } else {
           const response = await axios.get(
-            `${API_URL}/farmasi/stok/obat?search=${searchQueryStokObat}&page=${page}&limit=${limit}`
+            `${API_URL}/farmasi/resep/obat?search=${searchQueryResepObat}&page=${page}&limit=${limit}`
           );
-          setStokObat(response.data.data);
+          setResepObat(response.data.data);
           setTotalPages(response.data.totalPages);
         }
       } catch (error) {
@@ -63,8 +62,8 @@ const Resep = () => {
       }
     };
 
-    fetchAllStokObat();
-  }, [searchQueryStokObat, page, stokObat, limit]);
+    fetchResepObat();
+  }, [searchQueryResepObat, page, resepObat, limit, filterResepObat]);
 
   // show select nama obat dari database obat
   const [namaObat, setNamaObat] = useState();
@@ -87,9 +86,9 @@ const Resep = () => {
     setIsEditOpen(false);
   };
 
-  const handleSearchStokObatChange = (event) => {
+  const handleSearchResepObatChange = (event) => {
     const data = event.target.value;
-    setSearchQueryStokObat(data);
+    setSearchQueryResepObat(data);
   };
 
   // delete
@@ -98,23 +97,23 @@ const Resep = () => {
     setDeleteUserId(id);
   };
   const handleConfirmDelete = () => {
-    handleDeleteStokObat(deleteUserId);
+    handleDeleteResepObat(deleteUserId);
     setIsDeleteOpen(false);
     setDeleteUserId(null);
   };
 
-  const handleDeleteStokObat = async (PasienId) => {
+  const handleDeleteResepObat = async (PasienId) => {
     try {
-      await axios.delete(`${API_URL}/farmasi/stok/obat/${PasienId}`);
+      await axios.delete(`${API_URL}/farmasi/obat/resep/${PasienId}`);
     } catch (error) {
       console.error(error);
       alert("Failed to delete data.");
     }
   };
 
-  const handleFormStokObatChange = (event) => {
-    setFormStokObat({
-      ...formStokObat,
+  const handleFormResepObatChange = (event) => {
+    setFormResepObat({
+      ...formResepObat,
       [event.target.name]: event.target.value,
     });
     const { name, value } = event.target;
@@ -124,14 +123,14 @@ const Resep = () => {
     }));
   };
 
-  const handleSubmitStokObat = async (event) => {
+  const handleSubmitResepObat = async (event) => {
     event.preventDefault();
     try {
       const dataNewObat = {
-        ...formStokObat,
+        ...formResepObat,
       };
       const sendData = await axios.post(
-        `${API_URL}/farmasi/obat/stok`,
+        `${API_URL}/farmasi/obat/Resep`,
         dataNewObat
       );
       setIsOpen(false);
@@ -140,14 +139,14 @@ const Resep = () => {
     }
   };
 
-  const handleEditSubmitStokObat = async (event) => {
+  const handleEditSubmitResepObat = async (event) => {
     event.preventDefault();
     try {
       const dataNewObatEdit = {
         ...dataById,
       };
       const sendData = await axios.patch(
-        `${API_URL}/farmasi/obat/stok/${idObat}`,
+        `${API_URL}/farmasi/obat/resep/${idObat}`,
         dataNewObatEdit
       );
       setIsEditOpen(false);
@@ -163,13 +162,13 @@ const Resep = () => {
   const handleEditStokObat = (idObatParse) => {
     setIdObat(idObatParse);
     setIsEditOpen(true);
-    fetchStokObatById(idObatParse);
+    fetchResepObatById(idObatParse);
   };
 
-  const fetchStokObatById = async (idObatParse) => {
+  const fetchResepObatById = async (idObatParse) => {
     try {
       const response = await axios.get(
-        `${API_URL}/farmasi/obat/stok/${idObatParse}`
+        `${API_URL}/farmasi/resep/obat/${idObatParse}`
       );
       setDataById(response.data);
     } catch (error) {
@@ -185,92 +184,46 @@ const Resep = () => {
         </div>
         <div class="flex-auto bg-dasar border-l-2 border-opacity-30 border-gray-300 shadow-md">
           <Header />
-          <div className="flex justify-between my-3 mx-8">
-            <button
-              className="py-0.2 px-1 mr-1 bg-emerald text-white  hover:opacity-75"
-              type="button"
-              onClick={handleBack}
-            >
-              KEMBALI
-            </button>
-            <div className="flex">
-              <Link to={"/farmasi/penjualan"}>
-                <button
-                  className="py-0.2 px-1 mr-1 bg-emerald text-white  hover:opacity-75"
-                  type="button"
-                >
-                  PENJUALAN
-                </button>
-              </Link>
-              <Link to={"/farmasi/resep"}>
-                <button
-                  className="py-0.2 px-1 mr-1 bg-emerald text-white  hover:opacity-75"
-                  type="button"
-                >
-                  RESEP
-                </button>
-              </Link>
-              <Link to={"/farmasi/gudang"}>
-                <button
-                  className="py-0.2 px-1 mr-1 bg-emerald text-white  hover:opacity-75"
-                  type="button"
-                >
-                  GUDANG
-                </button>
-              </Link>
-              <Link to={"/farmasi/report"}>
-                <button
-                  className="py-0.2 px-1 mr-1 bg-emerald text-white  hover:opacity-75"
-                  type="button"
-                >
-                  REPORT
-                </button>
-              </Link>
-            </div>
-          </div>
+          <MenuFarmasi />
 
           <div class="container mx-auto 2xl:w-screen px-8 pb-10">
             <div className="container border border-state-300 bg-white p-2 mt-5 ">
               <div className="flex justify-end mb-4">
-                <Link to={"/farmasi/obat/data"}>
-                  <button
-                    className="py-0.2 text-sm  px-1 mr-1 bg-white border text-black border-black  hover:bg-emerald300"
-                    type="button"
-                  >
-                    DATA OBAT
-                  </button>
-                </Link>
-                <Link to={"/farmasi/obat/stok"}>
-                  <button
-                    className="py-0.2 text-sm  px-1 mr-1 bg-white border text-black border-black  hover:bg-emerald300"
-                    type="button"
-                  >
-                    STOK OBAT
-                  </button>
-                </Link>
-                <Link to={"/farmasi/laporan"}>
-                  <button
-                    className="py-0.2 text-sm  px-1 mr-1 bg-white border text-black border-black hover:bg-emerald300"
-                    type="button"
-                  >
-                    LAPORAN
-                  </button>
-                </Link>
-                <Link to={"/farmasi/order"}>
-                  <button
-                    className="py-0.2 text-sm px-1 mr-1 bg-white border text-black border-black hover:bg-emerald300"
-                    type="button"
-                  >
-                    PEMBELIAN
-                  </button>
-                </Link>
+                <button
+                  onClick={() => setSearchQueryResepObat("")}
+                  className="py-0.2 text-sm  px-1 mr-1 bg-white border text-black border-black  hover:bg-emerald300"
+                  type="button"
+                >
+                  ALL RESEP
+                </button>
+                <button
+                  onClick={() => setSearchQueryResepObat("antrian")}
+                  className="py-0.2 text-sm  px-1 mr-1 bg-white border text-black border-black  hover:bg-emerald300"
+                  type="button"
+                >
+                  ANTRIAN
+                </button>
+                <button
+                  onClick={() => setSearchQueryResepObat("sedang pengerjaan")}
+                  className="py-0.2 text-sm  px-1 mr-1 bg-white border text-black border-black  hover:bg-emerald300"
+                  type="button"
+                >
+                  SEDANG PENGERJAAN
+                </button>
+                <button
+                  onClick={() => setSearchQueryResepObat("selesai")}
+                  className="py-0.2 text-sm  px-1 mr-1 bg-white border text-black border-black  hover:bg-emerald300"
+                  type="button"
+                >
+                  SELESAI
+                </button>
               </div>
               <div className="search text-left flex">
                 <div className="search text-left flex ">
                   <form>
                     <input
-                      onChange={handleSearchStokObatChange}
-                      value={searchQueryStokObat}
+                      onChange={handleSearchResepObatChange}
+                      value={searchQueryResepObat}
                       className="border border-black pl-0.5 py-0.4  "
                       type="text"
                       placeholder="Cari data obat..."
@@ -337,7 +290,7 @@ const Resep = () => {
               </div>
               <div class="overflow-x-auto mb-5 ">
                 <div className="container bg-emerald300 text-left pl-2 mt-3 py-0.5">
-                  Data Obat
+                  Resep Obat
                 </div>
                 <div className="overflow-y-auto max-h-[48vh]">
                   <table class="table-auto w-full">
@@ -350,16 +303,19 @@ const Resep = () => {
                           Nama Obat
                         </th>
                         <th class="px-6 py-3 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Jumlah Stok
+                          Dosis
                         </th>
                         <th class="px-6 py-3 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Tanggal Kadaluarsa
+                          Jumlah
                         </th>
                         <th class="px-6 py-3 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Tanggal Penerimaan
+                          Nama Pasien
                         </th>
                         <th class="px-6 py-3 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Lokasi Penyimpanan
+                          Nama Dokter
+                        </th>
+                        <th class="px-6 py-3 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Tgl Resep
                         </th>
                         <th class="px-6 py-3 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                           Status
@@ -371,8 +327,8 @@ const Resep = () => {
                       </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200 ">
-                      {stokObat.length > 0 ? (
-                        stokObat.map((item, index) => (
+                      {resepObat.length > 0 ? (
+                        resepObat.map((item, index) => (
                           <tr key={item.id}>
                             <td className="py-0.3 px-6 whitespace-nowrap">
                               {index + 1}
@@ -381,20 +337,22 @@ const Resep = () => {
                               {item.obat_data.nama_obat}
                             </td>
                             <td className="py-0.3 px-6 whitespace-nowrap">
-                              {item.jumlah_stok}
-                            </td>
-
-                            <td className="py-0.3 px-6 whitespace-nowrap">
-                              {item.tanggal_kadaluarsa}
+                              {item.dosis}
                             </td>
                             <td className="py-0.3 px-6 whitespace-nowrap">
-                              {item.tanggal_penerimaan}
+                              {item.jumlah}
                             </td>
                             <td className="py-0.3 px-6 whitespace-nowrap">
-                              {item.lokasi_penyimpanan}
+                              {item.pasien_rm.nama_lengkap}
                             </td>
                             <td className="py-0.3 px-6 whitespace-nowrap">
-                              {item.status_stok}
+                              {item.dokter.nama_dokter}
+                            </td>
+                            <td className="py-0.3 px-6 whitespace-nowrap">
+                              {item.tanggal_resep}
+                            </td>
+                            <td className="py-0.3 px-6 whitespace-nowrap">
+                              {item.status_resep}
                             </td>
 
                             <td class=" py-0.3 whitespace-nowrap">
@@ -419,7 +377,7 @@ const Resep = () => {
                       ) : (
                         <tr>
                           <td colspan="7" className="bg-gray-200 w-full">
-                            {searchQueryStokObat
+                            {searchQueryResepObat
                               ? "No results found"
                               : "Data tidak tersedia"}
                           </td>
@@ -483,7 +441,7 @@ const Resep = () => {
                 </button>
               </div>
 
-              <form onSubmit={handleSubmitStokObat}>
+              <form onSubmit={handleSubmitResepObat}>
                 <div class="bg-gray-50 p-6">
                   <div class="flex flex-col md:flex-row">
                     <div class="w-full  px-4 mb-4 md:mb-0">
@@ -501,11 +459,11 @@ const Resep = () => {
                           class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                           name="kategori_obat"
                           type="text"
-                          onChange={handleFormStokObatChange}
+                          onChange={handleFormResepObatChange}
                         />
                       </div>
 
-                      <div className="field">
+                      {/* <div className="field">
                         <label className="block text-gray-700 text-sm text-left font-bold mb-1">
                           Dosis Obat
                         </label>
@@ -561,7 +519,7 @@ const Resep = () => {
                           name="deskripsi_obat"
                           onChange={handleFormStokObatChange}
                         ></textarea>
-                      </div>
+                      </div> */}
                     </div>
                   </div>
                 </div>
@@ -599,7 +557,7 @@ const Resep = () => {
                 </button>
               </div>
 
-              <form onSubmit={handleEditSubmitStokObat}>
+              <form onSubmit={handleEditSubmitResepObat}>
                 <div class="bg-gray-50 p-6">
                   <div class="flex flex-col md:flex-row">
                     <div class="w-full  px-4 mb-4 md:mb-0">
@@ -607,7 +565,7 @@ const Resep = () => {
                         <label className="block text-gray-700 text-sm text-left font-bold mb-1">
                           Nama Obat
                         </label>
-                        <input
+                        {/* <input
                           class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                           name="nama_obat"
                           value={dataById.nama_obat}
@@ -689,6 +647,7 @@ const Resep = () => {
                           name="deskripsi_obat"
                           onChange={handleFormStokObatChange}
                         ></textarea>
+                      </div> */}
                       </div>
                     </div>
                   </div>

@@ -6,7 +6,7 @@ import Modal from "../../../component/Modal";
 import { API_URL } from "../../../config";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import Select from "react-select";
+import MenuFarmasi from "../component/MenuFarmasi";
 
 const StokObat = () => {
   const navigate = useNavigate();
@@ -54,7 +54,6 @@ const StokObat = () => {
           );
           setStokObat(response.data.data);
           setTotalPages(response.data.totalPages);
-          console.log(response);
         } else {
           const response = await axios.get(
             `${API_URL}/farmasi/stok/obat?search=${searchQueryStokObat}&page=${page}&limit=${limit}`
@@ -203,86 +202,9 @@ const StokObat = () => {
         </div>
         <div class="flex-auto bg-dasar border-l-2 border-opacity-30 border-gray-300 shadow-md">
           <Header />
-          <div className="flex justify-between my-3 mx-8">
-            <button
-              className="py-0.2 px-1 mr-1 bg-emerald text-white  hover:opacity-75"
-              type="button"
-              onClick={handleBack}
-            >
-              KEMBALI
-            </button>
-            <div className="flex">
-              <Link to={"/farmasi/penjualan"}>
-                <button
-                  className="py-0.2 px-1 mr-1 bg-emerald text-white  hover:opacity-75"
-                  type="button"
-                >
-                  PENJUALAN
-                </button>
-              </Link>
-              <Link to={"/farmasi/resep"}>
-                <button
-                  className="py-0.2 px-1 mr-1 bg-emerald text-white  hover:opacity-75"
-                  type="button"
-                >
-                  RESEP
-                </button>
-              </Link>
-              <Link to={"/farmasi/gudang"}>
-                <button
-                  className="py-0.2 px-1 mr-1 bg-emerald text-white  hover:opacity-75"
-                  type="button"
-                >
-                  GUDANG
-                </button>
-              </Link>
-              <Link to={"/farmasi/report"}>
-                <button
-                  className="py-0.2 px-1 mr-1 bg-emerald text-white  hover:opacity-75"
-                  type="button"
-                >
-                  REPORT
-                </button>
-              </Link>
-            </div>
-          </div>
-
+          <MenuFarmasi />
           <div class="container mx-auto 2xl:w-screen px-8 pb-10">
             <div className="container border border-state-300 bg-white p-2 mt-5 ">
-              <div className="flex justify-end mb-4">
-                <Link to={"/farmasi/obat/data"}>
-                  <button
-                    className="py-0.2 text-sm  px-1 mr-1 bg-white border text-black border-black  hover:bg-emerald300"
-                    type="button"
-                  >
-                    DATA OBAT
-                  </button>
-                </Link>
-                <Link to={"/farmasi/obat/stok"}>
-                  <button
-                    className="py-0.2 text-sm  px-1 mr-1 bg-white border text-black border-black  hover:bg-emerald300"
-                    type="button"
-                  >
-                    STOK OBAT
-                  </button>
-                </Link>
-                <Link to={"/farmasi/laporan"}>
-                  <button
-                    className="py-0.2 text-sm  px-1 mr-1 bg-white border text-black border-black hover:bg-emerald300"
-                    type="button"
-                  >
-                    LAPORAN
-                  </button>
-                </Link>
-                <Link to={"/farmasi/order"}>
-                  <button
-                    className="py-0.2 text-sm px-1 mr-1 bg-white border text-black border-black hover:bg-emerald300"
-                    type="button"
-                  >
-                    PEMBELIAN
-                  </button>
-                </Link>
-              </div>
               <div className="search text-left flex">
                 <div className="search text-left flex ">
                   <form>
@@ -479,7 +401,6 @@ const StokObat = () => {
               </div>
             </div>
           </Modal>
-
           {/* modal tambah data obat */}
           <Modal isOpen={isOpen} onClose={handleCloseModal}>
             <div class="bg-white fixed rounded-lg w-11/12 overflow-hidden shadow-xl transform transition-all max-w-screen-lg ">
@@ -509,7 +430,7 @@ const StokObat = () => {
                         <label className="block text-gray-700 text-sm text-left font-bold mb-1">
                           Nama Obat
                         </label>
-                        <Select
+                        {/* <Select
                           options={namaObat}
                           value={selectedOption}
                           onChange={handleSelectChange}
@@ -518,7 +439,7 @@ const StokObat = () => {
                           name="nama_obat"
                           isClearable
                           isSearchable
-                        />
+                        /> */}
                       </div>
                       <div className="field">
                         <label className="block text-gray-700 text-sm text-left font-bold mb-1">
@@ -605,7 +526,6 @@ const StokObat = () => {
               </form>
             </div>
           </Modal>
-
           {/* modal edit data obat */}
           <Modal isOpen={isEditOpen} onClose={handleCloseModal}>
             <div class="bg-white fixed rounded-lg w-11/12 overflow-hidden shadow-xl transform transition-all max-w-screen-lg ">
@@ -635,7 +555,7 @@ const StokObat = () => {
                         <label className="block text-gray-700 text-sm text-left font-bold mb-1">
                           Nama Obat
                         </label>
-                        <Select
+                        {/* <Select
                           options={namaObat}
                           value={selectedOption}
                           onChange={handleSelectChange}
@@ -644,7 +564,7 @@ const StokObat = () => {
                           name="nama_obat"
                           isClearable
                           isSearchable
-                        />
+                        /> */}
                       </div>
                       <div className="field">
                         <label className="block text-gray-700 text-sm text-left font-bold mb-1">
