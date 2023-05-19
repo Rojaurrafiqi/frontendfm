@@ -34,11 +34,17 @@ const Resep = () => {
   // modal tambah data
   const [isOpen, setIsOpen] = useState(false);
 
+  // modal detail resep
+  const [isDetailOpen, setIsDetailOpen] = useState(false);
+
   // form data obat
   const [formResepObat, setFormResepObat] = useState({});
 
   // edit form data obat
   const [editFormResepObat, setEditFormResepObat] = useState({});
+
+  // status resep
+  const [statusResep, setStatusResep] = useState("selesai");
 
   //all pasien ranap
   useEffect(() => {
@@ -49,6 +55,7 @@ const Resep = () => {
             `${API_URL}/farmasi/resep/obat?search=${searchQueryResepObat}&page=1&limit=${limit}`
           );
           setResepObat(response.data.data);
+          // setStatusResep(response.data.data.status_resep);
           setTotalPages(response.data.totalPages);
         } else {
           const response = await axios.get(
@@ -56,6 +63,7 @@ const Resep = () => {
           );
           setResepObat(response.data.data);
           setTotalPages(response.data.totalPages);
+          // setStatusResep(response.data.data.status_resep);
         }
       } catch (error) {
         console.log(error);
@@ -63,7 +71,7 @@ const Resep = () => {
     };
 
     fetchResepObat();
-  }, [searchQueryResepObat, page, resepObat, limit, filterResepObat]);
+  }, [searchQueryResepObat, page, resepObat, limit]);
 
   // show select nama obat dari database obat
   const [namaObat, setNamaObat] = useState();
@@ -84,6 +92,7 @@ const Resep = () => {
     setIsDeleteOpen(false);
     setIsOpen(false);
     setIsEditOpen(false);
+    setIsDetailOpen(false);
   };
 
   const handleSearchResepObatChange = (event) => {
@@ -128,9 +137,14 @@ const Resep = () => {
     try {
       const dataNewObat = {
         ...formResepObat,
+        status_resep: "antrian",
+        id_obat: 4,
+        id_pasien_rm: 4,
+        id_dokter: 1,
       };
+
       const sendData = await axios.post(
-        `${API_URL}/farmasi/obat/Resep`,
+        `${API_URL}/farmasi/obat/resep`,
         dataNewObat
       );
       setIsOpen(false);
@@ -177,7 +191,7 @@ const Resep = () => {
   };
 
   return (
-    <div class="h-full">
+    <div class="h-full overflow-x-hidden">
       <div class="flex">
         <div class="flex-none">
           <Sidebar />
@@ -356,6 +370,31 @@ const Resep = () => {
                             </td>
 
                             <td class=" py-0.3 whitespace-nowrap">
+                              {statusResep == "antrian" ? (
+                                <button
+                                  onClick={() => setIsDetailOpen(!isDetailOpen)}
+                                  className="ml-1 py-0.1 px-1 mr-1 my-0.2 bg-emerald text-white  hover:opacity-75"
+                                  type="button"
+                                >
+                                  Tangani
+                                </button>
+                              ) : (
+                                <button
+                                  onClick={() => setIsDetailOpen(!isDetailOpen)}
+                                  className="ml-1 py-0.1 px-1 mr-1 my-0.2 bg-emerald text-white  hover:opacity-75"
+                                  type="button"
+                                >
+                                  Selesai
+                                </button>
+                              )}
+
+                              <button
+                                onClick={() => setIsDetailOpen(!isDetailOpen)}
+                                className="ml-1 py-0.1 px-1 mr-1 my-0.2 bg-emerald text-white  hover:opacity-75"
+                                type="button"
+                              >
+                                Detail
+                              </button>
                               <button
                                 onClick={() => handleEditStokObat(item.id)}
                                 className="ml-1 py-0.1 px-1 mr-1 my-0.2 bg-emerald text-white  hover:opacity-75"
@@ -389,7 +428,7 @@ const Resep = () => {
               </div>
             </div>
           </div>
-          {/* modal delete pasien ranap */}
+          {/* modal delete resep obat */}
           <Modal isOpen={isDeleteOpen} onClose={handleCloseModal}>
             <div class="bg-white rounded-lg w-1/3 mt-10 overflow-hidden shadow-xl transform transition-all max-w-screen-lg ">
               <div class="bg-gray-50 p-6">
@@ -420,12 +459,12 @@ const Resep = () => {
             </div>
           </Modal>
 
-          {/* modal tambah data obat */}
+          {/* modal tambah data resep */}
           <Modal isOpen={isOpen} onClose={handleCloseModal}>
             <div class="bg-white fixed rounded-lg w-11/12 overflow-hidden shadow-xl transform transition-all max-w-screen-lg ">
               <div class="flex justify-between px-4 py-2">
                 <h3 className="text-lg leading-6 font-medium text-gray-900 text-left">
-                  Tambah Data Obat
+                  Tambah Resep
                 </h3>
                 <button
                   class="text-gray-600 hover:text-gray-800 focus:outline-none"
@@ -449,77 +488,103 @@ const Resep = () => {
                         <label className="block text-gray-700 text-sm text-left font-bold mb-1">
                           Nama Obat
                         </label>
-                        {/* // */}
+                        <input
+                          class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                          name="id_obat"
+                          type="number"
+                          onChange={handleFormResepObatChange}
+                        />
                       </div>
                       <div className="field">
                         <label className="block text-gray-700 text-sm text-left font-bold mb-1">
-                          Kategori Obat
+                          Jumlah
                         </label>
                         <input
                           class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                          name="kategori_obat"
+                          name="jumlah"
                           type="text"
                           onChange={handleFormResepObatChange}
                         />
                       </div>
-
-                      {/* <div className="field">
+                      <div className="field">
                         <label className="block text-gray-700 text-sm text-left font-bold mb-1">
-                          Dosis Obat
+                          Dosis
                         </label>
                         <input
                           class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                          name="dosis_obat"
+                          name="dosis"
                           type="text"
-                          onChange={handleFormStokObatChange}
+                          onChange={handleFormResepObatChange}
                         />
                       </div>
                       <div className="field">
                         <label className="block text-gray-700 text-sm text-left font-bold mb-1">
-                          Efek Samping
+                          Nama Pasien
                         </label>
                         <input
                           class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                          name="efek_samping"
-                          type="text"
-                          onChange={handleFormStokObatChange}
+                          name="id_pasien_rm"
+                          type="number"
+                          onChange={handleFormResepObatChange}
+                        />
+                      </div>
+                      <div className="field">
+                        <label className="block text-gray-700 text-sm text-left font-bold mb-1">
+                          Nama Dokter
+                        </label>
+                        <input
+                          class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                          name="id_dokter"
+                          type="number"
+                          onChange={handleFormResepObatChange}
                         />
                       </div>
                     </div>
                     <div class="w-full  px-4 mb-4 md:mb-0">
                       <div className="field">
                         <label className="block text-gray-700 text-sm text-left font-bold mb-1">
-                          Peringatan
+                          Frekuensi Pemberian
                         </label>
                         <input
                           class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                          name="peringatan"
+                          name="frekuensi"
                           type="text"
-                          onChange={handleFormStokObatChange}
+                          onChange={handleFormResepObatChange}
+                        />
+                      </div>
+                      <div className="field">
+                        <label className="block text-gray-700 text-sm text-left font-bold mb-1">
+                          Durasi Obat
+                        </label>
+                        <input
+                          class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                          name="durasi_obat"
+                          type="text"
+                          onChange={handleFormResepObatChange}
+                        />
+                      </div>
+                      <div className="field">
+                        <label className="block text-gray-700 text-sm text-left font-bold mb-1">
+                          Tanggal Resep
+                        </label>
+                        <input
+                          class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                          name="tanggal_resep"
+                          type="date"
+                          onChange={handleFormResepObatChange}
                         />
                       </div>
                       <div className="field">
                         <label className="block text-gray-700 text-sm text-left font-bold mb-1">
                           Instruksi Penggunaan
                         </label>
-                        <input
-                          class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                          type="text"
-                          name="instruksi_penggunaan"
-                          onChange={handleFormStokObatChange}
-                        />
-                      </div>
-                      <div className="field">
-                        <label className="block text-gray-700 text-sm text-left font-bold mb-1">
-                          Deskripsi Obat
-                        </label>
                         <textarea
-                          class="w-full px-4 py-2 text-gray-700 border rounded-lg focus:outline-none focus:border-blue-500 resize-none"
-                          rows="4"
-                          name="deskripsi_obat"
-                          onChange={handleFormStokObatChange}
+                          class="w-full px-4 text-sm py-2 text-gray-700 border rounded-lg focus:outline-none focus:border-blue-500 resize-none"
+                          rows="3"
+                          name="instruksi_penggunaan"
+                          onChange={handleFormResepObatChange}
                         ></textarea>
-                      </div> */}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -565,89 +630,111 @@ const Resep = () => {
                         <label className="block text-gray-700 text-sm text-left font-bold mb-1">
                           Nama Obat
                         </label>
-                        {/* <input
+                        <input
                           class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                          name="nama_obat"
-                          value={dataById.nama_obat}
-                          type="text"
-                          onChange={handleFormStokObatChange}
+                          name="id_obat"
+                          value={dataById.id_obat}
+                          type="number"
+                          onChange={handleFormResepObatChange}
                         />
                       </div>
                       <div className="field">
                         <label className="block text-gray-700 text-sm text-left font-bold mb-1">
-                          Kategori Obat
+                          Jumlah
                         </label>
                         <input
                           class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                          value={dataById.kategori_obat}
-                          name="kategori_obat"
+                          name="jumlah"
+                          value={dataById.jumlah}
                           type="text"
-                          onChange={handleFormStokObatChange}
-                        />
-                      </div>
-
-                      <div className="field">
-                        <label className="block text-gray-700 text-sm text-left font-bold mb-1">
-                          Dosis Obat
-                        </label>
-                        <input
-                          value={dataById.dosis_obat}
-                          class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                          name="dosis_obat"
-                          type="text"
-                          onChange={handleFormStokObatChange}
+                          onChange={handleFormResepObatChange}
                         />
                       </div>
                       <div className="field">
                         <label className="block text-gray-700 text-sm text-left font-bold mb-1">
-                          Efek Samping
+                          Dosis
                         </label>
                         <input
-                          value={dataById.efek_samping}
                           class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                          name="efek_samping"
+                          name="dosis"
+                          value={dataById.dosis}
                           type="text"
-                          onChange={handleFormStokObatChange}
+                          onChange={handleFormResepObatChange}
+                        />
+                      </div>
+                      <div className="field">
+                        <label className="block text-gray-700 text-sm text-left font-bold mb-1">
+                          Nama Pasien
+                        </label>
+                        <input
+                          value={dataById.nama_lengkap}
+                          class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                          name="id_pasien_rm"
+                          type="number"
+                          onChange={handleFormResepObatChange}
+                        />
+                      </div>
+                      <div className="field">
+                        <label className="block text-gray-700 text-sm text-left font-bold mb-1">
+                          Nama Dokter
+                        </label>
+                        <input
+                          value={dataById.nama_dokter}
+                          class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                          name="id_dokter"
+                          type="number"
+                          onChange={handleFormResepObatChange}
                         />
                       </div>
                     </div>
                     <div class="w-full  px-4 mb-4 md:mb-0">
                       <div className="field">
                         <label className="block text-gray-700 text-sm text-left font-bold mb-1">
-                          Peringatan
+                          Frekuensi Pemberian
                         </label>
                         <input
-                          value={dataById.peringatan}
                           class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                          name="peringatan"
+                          name="frekuensi"
+                          value={dataById.frekuensi}
                           type="text"
-                          onChange={handleFormStokObatChange}
+                          onChange={handleFormResepObatChange}
+                        />
+                      </div>
+                      <div className="field">
+                        <label className="block text-gray-700 text-sm text-left font-bold mb-1">
+                          Durasi Obat
+                        </label>
+                        <input
+                          class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                          name="durasi_obat"
+                          value={dataById.durasi_obat}
+                          type="text"
+                          onChange={handleFormResepObatChange}
+                        />
+                      </div>
+                      <div className="field">
+                        <label className="block text-gray-700 text-sm text-left font-bold mb-1">
+                          Tanggal Resep
+                        </label>
+                        <input
+                          class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                          name="tanggal_resep"
+                          value={dataById.tanggal_resep}
+                          type="date"
+                          onChange={handleFormResepObatChange}
                         />
                       </div>
                       <div className="field">
                         <label className="block text-gray-700 text-sm text-left font-bold mb-1">
                           Instruksi Penggunaan
                         </label>
-                        <input
-                          value={dataById.instruksi_penggunaan}
-                          class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                          type="text"
-                          name="instruksi_penggunaan"
-                          onChange={handleFormStokObatChange}
-                        />
-                      </div>
-                      <div className="field">
-                        <label className="block text-gray-700 text-sm text-left font-bold mb-1">
-                          Deskripsi Obat
-                        </label>
                         <textarea
-                          class="w-full px-4 py-2 text-gray-700 border rounded-lg focus:outline-none focus:border-blue-500 resize-none"
-                          rows="4"
-                          value={dataById.deskripsi_obat}
-                          name="deskripsi_obat"
-                          onChange={handleFormStokObatChange}
+                          class="w-full px-4 text-sm py-2 text-gray-700 border rounded-lg focus:outline-none focus:border-blue-500 resize-none"
+                          rows="3"
+                          value={dataById.instruksi_penggunaan}
+                          name="instruksi_penggunaan"
+                          onChange={handleFormResepObatChange}
                         ></textarea>
-                      </div> */}
                       </div>
                     </div>
                   </div>
@@ -662,6 +749,137 @@ const Resep = () => {
                   </button>
                 </div>
               </form>
+            </div>
+          </Modal>
+
+          {/* modal detail resep obat */}
+          <Modal isOpen={isDetailOpen} onClose={handleCloseModal}>
+            <div class="bg-white fixed rounded-lg w-11/12 overflow-hidden shadow-xl transform transition-all max-w-screen-lg ">
+              <div class="flex justify-between px-4 py-2">
+                <h3 className="text-lg leading-6 font-medium text-gray-900 text-left">
+                  Detail Resep Obat
+                </h3>
+                <button
+                  class="text-gray-600 hover:text-gray-800 focus:outline-none"
+                  onClick={handleCloseModal}
+                >
+                  <svg class="h-6 w-6 fill-current" viewBox="0 0 20 20">
+                    <path
+                      fill-rule="evenodd"
+                      d="M5.293 5.293a1 1 0 011.414 0L10 8.586l3.293-3.293a1 1 0 111.414 1.414L11.414 10l3.293 3.293a1 1 0 01-1.414 1.414L10 11.414l-3.293 3.293a1 1 0 01-1.414-1.414L8.586 10 5.293 6.707a1 1 0 010-1.414z"
+                      clip-rule="evenodd"
+                    ></path>
+                  </svg>
+                </button>
+              </div>
+
+              <div class="bg-gray-50 p-6">
+                <div class="flex flex-col md:flex-row">
+                  <div class="w-full  px-4 mb-4 md:mb-0">
+                    <div className="field">
+                      <label className="block text-gray-700 text-sm text-left font-bold mb-1">
+                        Nama Obat
+                      </label>
+                      <input
+                        class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        value={dataById.id_obat}
+                        readOnly
+                        type="number"
+                      />
+                    </div>
+                    <div className="field">
+                      <label className="block text-gray-700 text-sm text-left font-bold mb-1">
+                        Jumlah
+                      </label>
+                      <input
+                        class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        readOnly
+                        value={dataById.jumlah}
+                        type="text"
+                      />
+                    </div>
+                    <div className="field">
+                      <label className="block text-gray-700 text-sm text-left font-bold mb-1">
+                        Dosis
+                      </label>
+                      <input
+                        class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        readOnly
+                        value={dataById.dosis}
+                        type="text"
+                      />
+                    </div>
+                    <div className="field">
+                      <label className="block text-gray-700 text-sm text-left font-bold mb-1">
+                        Nama Pasien
+                      </label>
+                      <input
+                        value={dataById.nama_lengkap}
+                        class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        type="number"
+                        readOnly
+                      />
+                    </div>
+                    <div className="field">
+                      <label className="block text-gray-700 text-sm text-left font-bold mb-1">
+                        Nama Dokter
+                      </label>
+                      <input
+                        value={dataById.nama_dokter}
+                        class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        type="number"
+                        readOnly
+                      />
+                    </div>
+                  </div>
+                  <div class="w-full  px-4 mb-4 md:mb-0">
+                    <div className="field">
+                      <label className="block text-gray-700 text-sm text-left font-bold mb-1">
+                        Frekuensi Pemberian
+                      </label>
+                      <input
+                        class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        value={dataById.frekuensi}
+                        type="text"
+                        readOnly
+                      />
+                    </div>
+                    <div className="field">
+                      <label className="block text-gray-700 text-sm text-left font-bold mb-1">
+                        Durasi Obat
+                      </label>
+                      <input
+                        class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        value={dataById.durasi_obat}
+                        type="text"
+                        readOnly
+                      />
+                    </div>
+                    <div className="field">
+                      <label className="block text-gray-700 text-sm text-left font-bold mb-1">
+                        Tanggal Resep
+                      </label>
+                      <input
+                        class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        value={dataById.tanggal_resep}
+                        type="date"
+                        readOnly
+                      />
+                    </div>
+                    <div className="field">
+                      <label className="block text-gray-700 text-sm text-left font-bold mb-1">
+                        Instruksi Penggunaan
+                      </label>
+                      <textarea
+                        class="w-full px-4 text-sm py-2 text-gray-700 border rounded-lg focus:outline-none focus:border-blue-500 resize-none"
+                        rows="3"
+                        readOnly
+                        value={dataById.instruksi_penggunaan}
+                      ></textarea>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </Modal>
         </div>

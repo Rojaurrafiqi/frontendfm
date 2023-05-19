@@ -7,6 +7,7 @@ import { API_URL } from "../../../config";
 import axios from "axios";
 import closeIcon from "../../../images/close.png";
 import { Link } from "react-router-dom";
+import MenuFarmasi from "../component/MenuFarmasi";
 
 const Penjualan = () => {
   const navigate = useNavigate();
@@ -22,49 +23,7 @@ const Penjualan = () => {
         </div>
         <div class="flex-auto bg-dasar border-l-2 border-opacity-30 border-gray-300 shadow-md">
           <Header />
-          <div className="flex justify-between my-3 mx-8">
-            <button
-              className="py-0.2 px-1 mr-1 bg-emerald text-white  hover:opacity-75"
-              type="button"
-              onClick={handleBack}
-            >
-              KEMBALI
-            </button>
-            <div className="flex">
-              <Link to={"/farmasi/penjualan"}>
-                <button
-                  className="py-0.2 px-1 mr-1 bg-emerald text-white  hover:opacity-75"
-                  type="button"
-                >
-                  PENJUALAN
-                </button>
-              </Link>
-              <Link to={"/farmasi/resep"}>
-                <button
-                  className="py-0.2 px-1 mr-1 bg-emerald text-white  hover:opacity-75"
-                  type="button"
-                >
-                  RESEP
-                </button>
-              </Link>
-              <Link to={"/farmasi/obat/data"}>
-                <button
-                  className="py-0.2 px-1 mr-1 bg-emerald text-white  hover:opacity-75"
-                  type="button"
-                >
-                  GUDANG
-                </button>
-              </Link>
-              <Link to={"/farmasi/report"}>
-                <button
-                  className="py-0.2 px-1 mr-1 bg-emerald text-white  hover:opacity-75"
-                  type="button"
-                >
-                  REPORT
-                </button>
-              </Link>
-            </div>
-          </div>
+          <MenuFarmasi />
 
           <div class="container mx-auto 2xl:w-screen px-8 pb-10">
             <div className="container border border-state-300 bg-white p-5 mt-5 mb-4 ">
