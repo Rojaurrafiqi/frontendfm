@@ -23,7 +23,7 @@ const Resep = () => {
 
   // search
   const [searchQueryResepObat, setSearchQueryResepObat] = useState("");
-  const [filterResepObat, setFilterResepObat] = useState("antrian");
+  // const [filterResepObat, setFilterResepObat] = useState("antrian");
 
   // modal delete
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
@@ -43,8 +43,17 @@ const Resep = () => {
   // edit form data obat
   const [editFormResepObat, setEditFormResepObat] = useState({});
 
-  // status resep
-  const [statusResep, setStatusResep] = useState("selesai");
+  //menangkap data detail resep
+  const [detailResep, setDetailResep] = useState({});
+
+  //modal edit
+  const [isEditOpen, setIsEditOpen] = useState(false);
+
+  // menyimpan sementara data resep by id
+  const [dataById, setDataById] = useState({});
+
+  // menyimpan id obat untuk di parse ke handleEditSubmitResepObat
+  const [idObat, setIdObat] = useState();
 
   //all pasien ranap
   useEffect(() => {
@@ -55,7 +64,6 @@ const Resep = () => {
             `${API_URL}/farmasi/resep/obat?search=${searchQueryResepObat}&page=1&limit=${limit}`
           );
           setResepObat(response.data.data);
-          // setStatusResep(response.data.data.status_resep);
           setTotalPages(response.data.totalPages);
         } else {
           const response = await axios.get(
@@ -63,7 +71,6 @@ const Resep = () => {
           );
           setResepObat(response.data.data);
           setTotalPages(response.data.totalPages);
-          // setStatusResep(response.data.data.status_resep);
         }
       } catch (error) {
         console.log(error);
@@ -105,6 +112,7 @@ const Resep = () => {
     setIsDeleteOpen(true);
     setDeleteUserId(id);
   };
+
   const handleConfirmDelete = () => {
     handleDeleteResepObat(deleteUserId);
     setIsDeleteOpen(false);
@@ -169,13 +177,14 @@ const Resep = () => {
     }
   };
 
-  const [isEditOpen, setIsEditOpen] = useState(false);
-  const [dataById, setDataById] = useState({});
-  const [idObat, setIdObat] = useState();
-
-  const handleEditStokObat = (idObatParse) => {
-    setIdObat(idObatParse);
+  const handleEditResepObat = (idObatParse) => {
     setIsEditOpen(true);
+    setIdObat(idObatParse);
+    fetchResepObatById(idObatParse);
+  };
+
+  const handleDetailResepObat = (idObatParse) => {
+    setIsDetailOpen(true);
     fetchResepObatById(idObatParse);
   };
 
@@ -184,7 +193,23 @@ const Resep = () => {
       const response = await axios.get(
         `${API_URL}/farmasi/resep/obat/${idObatParse}`
       );
-      setDataById(response.data);
+      if (response.data.obat_data && response.data.obat_data.nama_obat) {
+        setDataById(response.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleStatusResep = async (id, status) => {
+    try {
+      const dataSend = {
+        status_resep: status,
+      };
+      const sendData = await axios.patch(
+        `${API_URL}/farmasi/obat/resep/${id}`,
+        dataSend
+      );
     } catch (error) {
       console.log(error);
     }
@@ -306,73 +331,86 @@ const Resep = () => {
                 <div className="container bg-emerald300 text-left pl-2 mt-3 py-0.5">
                   Resep Obat
                 </div>
-                <div className="overflow-y-auto max-h-[48vh]">
+                <div className="overflow-y-auto overflow-x-auto max-h-[48vh]">
                   <table class="table-auto w-full">
-                    <thead className="sticky top-0">
+                    <thead className="sticky top-0 ">
                       <tr>
-                        <th class="px-6 py-3 bg-gray-50  text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th class=" py-3 px-6 bg-gray-50  text-xs font-medium text-gray-500 uppercase tracking-wider">
                           No
                         </th>
-                        <th class="px-6 py-3 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th class=" py-3 px-6 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                           Nama Obat
                         </th>
-                        <th class="px-6 py-3 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th class=" py-3 px-6 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                           Dosis
                         </th>
-                        <th class="px-6 py-3 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th class=" py-3 px-6 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                           Jumlah
                         </th>
-                        <th class="px-6 py-3 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th class=" py-3 px-6 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                           Nama Pasien
                         </th>
-                        <th class="px-6 py-3 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th class=" py-3 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                           Nama Dokter
                         </th>
-                        <th class="px-6 py-3 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th class=" py-3 px-6 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                           Tgl Resep
                         </th>
-                        <th class="px-6 py-3 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th class=" py-3 px-6 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                           Status
                         </th>
-                        <th class="px-6 py-3 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th class=" py-3 px-6 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                           Aksi
                         </th>
-                        <th class="px-6 py-3 bg-gray-50 text-left text-xs fonst-medium text-gray-500 uppercase tracking-wider"></th>
+                        <th class=" py-3 px-6 bg-gray-50 text-left text-xs fonst-medium text-gray-500 uppercase tracking-wider"></th>
                       </tr>
                     </thead>
-                    <tbody class="bg-white divide-y divide-gray-200 ">
+                    <tbody class="bg-white divide-y  divide-gray-200 ">
                       {resepObat.length > 0 ? (
                         resepObat.map((item, index) => (
                           <tr key={item.id}>
-                            <td className="py-0.3 px-6 whitespace-nowrap">
+                            <td className="py-0.3  px-6 whitespace-nowrap">
                               {index + 1}
                             </td>
-                            <td className="py-0.3 px-6 whitespace-nowrap">
+                            <td className="py-0.3  px-6 whitespace-nowrap">
                               {item.obat_data.nama_obat}
                             </td>
-                            <td className="py-0.3 px-6 whitespace-nowrap">
+                            <td className="py-0.3  px-6 whitespace-nowrap">
                               {item.dosis}
                             </td>
-                            <td className="py-0.3 px-6 whitespace-nowrap">
+                            <td className="py-0.3  px-6 whitespace-nowrap">
                               {item.jumlah}
                             </td>
-                            <td className="py-0.3 px-6 whitespace-nowrap">
+                            <td className="py-0.3  px-6 whitespace-nowrap">
                               {item.pasien_rm.nama_lengkap}
                             </td>
-                            <td className="py-0.3 px-6 whitespace-nowrap">
+                            <td className="py-0.3  px-6 whitespace-nowrap">
                               {item.dokter.nama_dokter}
                             </td>
-                            <td className="py-0.3 px-6 whitespace-nowrap">
+                            <td className="py-0.3  px-6 whitespace-nowrap">
                               {item.tanggal_resep}
                             </td>
-                            <td className="py-0.3 px-6 whitespace-nowrap">
+                            <td
+                              className={`py-0.3  whitespace-nowrap ${
+                                item.status_resep === "antrian"
+                                  ? "text-red-500"
+                                  : item.status_resep === "selesai"
+                                  ? "text-emerald"
+                                  : "text-yellow-600"
+                              }`}
+                            >
                               {item.status_resep}
                             </td>
 
-                            <td class=" py-0.3 whitespace-nowrap">
-                              {statusResep == "antrian" ? (
+                            <td class=" py-0.3  whitespace-nowrap text-right">
+                              {item.status_resep === "antrian" ? (
                                 <button
-                                  onClick={() => setIsDetailOpen(!isDetailOpen)}
+                                  onClick={() =>
+                                    handleStatusResep(
+                                      item.id,
+                                      "sedang pengerjaan"
+                                    )
+                                  }
                                   className="ml-1 py-0.1 px-1 mr-1 my-0.2 bg-emerald text-white  hover:opacity-75"
                                   type="button"
                                 >
@@ -380,8 +418,14 @@ const Resep = () => {
                                 </button>
                               ) : (
                                 <button
-                                  onClick={() => setIsDetailOpen(!isDetailOpen)}
-                                  className="ml-1 py-0.1 px-1 mr-1 my-0.2 bg-emerald text-white  hover:opacity-75"
+                                  onClick={() =>
+                                    handleStatusResep(item.id, "selesai")
+                                  }
+                                  className={
+                                    item.status_resep === "selesai"
+                                      ? `hidden`
+                                      : `ml-1 py-0.1 px-1 mr-1 my-0.2 bg-emerald text-white  hover:opacity-75`
+                                  }
                                   type="button"
                                 >
                                   Selesai
@@ -389,14 +433,14 @@ const Resep = () => {
                               )}
 
                               <button
-                                onClick={() => setIsDetailOpen(!isDetailOpen)}
+                                onClick={() => handleDetailResepObat(item.id)}
                                 className="ml-1 py-0.1 px-1 mr-1 my-0.2 bg-emerald text-white  hover:opacity-75"
                                 type="button"
                               >
                                 Detail
                               </button>
                               <button
-                                onClick={() => handleEditStokObat(item.id)}
+                                onClick={() => handleEditResepObat(item.id)}
                                 className="ml-1 py-0.1 px-1 mr-1 my-0.2 bg-emerald text-white  hover:opacity-75"
                                 type="button"
                               >
@@ -753,135 +797,91 @@ const Resep = () => {
           </Modal>
 
           {/* modal detail resep obat */}
-          <Modal isOpen={isDetailOpen} onClose={handleCloseModal}>
-            <div class="bg-white fixed rounded-lg w-11/12 overflow-hidden shadow-xl transform transition-all max-w-screen-lg ">
-              <div class="flex justify-between px-4 py-2">
-                <h3 className="text-lg leading-6 font-medium text-gray-900 text-left">
-                  Detail Resep Obat
-                </h3>
-                <button
-                  class="text-gray-600 hover:text-gray-800 focus:outline-none"
-                  onClick={handleCloseModal}
-                >
-                  <svg class="h-6 w-6 fill-current" viewBox="0 0 20 20">
-                    <path
-                      fill-rule="evenodd"
-                      d="M5.293 5.293a1 1 0 011.414 0L10 8.586l3.293-3.293a1 1 0 111.414 1.414L11.414 10l3.293 3.293a1 1 0 01-1.414 1.414L10 11.414l-3.293 3.293a1 1 0 01-1.414-1.414L8.586 10 5.293 6.707a1 1 0 010-1.414z"
-                      clip-rule="evenodd"
-                    ></path>
-                  </svg>
-                </button>
-              </div>
+          {isDetailOpen && (
+            <Modal isOpen={isDetailOpen} onClose={handleCloseModal}>
+              <div class="bg-gray-100 fixed rounded-lg w-11/12 overflow-hidden shadow-xl transform transition-all max-w-screen-lg ">
+                <div class="flex justify-between px-4 py-2">
+                  <h3 className="text-lg leading-6 font-medium text-gray-900 text-left">
+                    Detail Resep Obat
+                  </h3>
+                  <button
+                    class="text-gray-600 hover:text-gray-800 focus:outline-none"
+                    onClick={handleCloseModal}
+                  >
+                    <svg class="h-6 w-6 fill-current" viewBox="0 0 20 20">
+                      <path
+                        fill-rule="evenodd"
+                        d="M5.293 5.293a1 1 0 011.414 0L10 8.586l3.293-3.293a1 1 0 111.414 1.414L11.414 10l3.293 3.293a1 1 0 01-1.414 1.414L10 11.414l-3.293 3.293a1 1 0 01-1.414-1.414L8.586 10 5.293 6.707a1 1 0 010-1.414z"
+                        clip-rule="evenodd"
+                      ></path>
+                    </svg>
+                  </button>
+                </div>
 
-              <div class="bg-gray-50 p-6">
-                <div class="flex flex-col md:flex-row">
-                  <div class="w-full  px-4 mb-4 md:mb-0">
-                    <div className="field">
-                      <label className="block text-gray-700 text-sm text-left font-bold mb-1">
-                        Nama Obat
-                      </label>
-                      <input
-                        class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        value={dataById.id_obat}
-                        readOnly
-                        type="number"
-                      />
+                <div class="bg-white p-6">
+                  <div class="flex flex-col md:flex-row">
+                    <div class="w-full px-4 mb-5 md:mb-0">
+                      <table className="table-auto border-collapse ">
+                        <tbody className="text-left">
+                          <tr>
+                            <td>Nama Obat</td>
+                            <td className="px-2">:</td>
+                            <td>{dataById?.obat_data?.nama_obat}</td>
+                          </tr>
+                          <tr>
+                            <td>Dosis</td>
+                            <td className="px-2">:</td>
+                            <td>{dataById?.dosis}</td>
+                          </tr>
+                          <tr>
+                            <td>Frekuensi Pemberian</td>
+                            <td className="px-2">:</td>
+                            <td>{dataById?.frekuensi}</td>
+                          </tr>
+                          <tr>
+                            <td>Jumlah Obat</td>
+                            <td className="px-2">:</td>
+                            <td>{dataById?.jumlah}</td>
+                          </tr>
+                          <tr>
+                            <td>Durasi Obat</td>
+                            <td className="px-2">:</td>
+                            <td>{dataById?.durasi_obat}</td>
+                          </tr>
+                        </tbody>
+                      </table>
                     </div>
-                    <div className="field">
-                      <label className="block text-gray-700 text-sm text-left font-bold mb-1">
-                        Jumlah
-                      </label>
-                      <input
-                        class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        readOnly
-                        value={dataById.jumlah}
-                        type="text"
-                      />
-                    </div>
-                    <div className="field">
-                      <label className="block text-gray-700 text-sm text-left font-bold mb-1">
-                        Dosis
-                      </label>
-                      <input
-                        class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        readOnly
-                        value={dataById.dosis}
-                        type="text"
-                      />
-                    </div>
-                    <div className="field">
-                      <label className="block text-gray-700 text-sm text-left font-bold mb-1">
-                        Nama Pasien
-                      </label>
-                      <input
-                        value={dataById.nama_lengkap}
-                        class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        type="number"
-                        readOnly
-                      />
-                    </div>
-                    <div className="field">
-                      <label className="block text-gray-700 text-sm text-left font-bold mb-1">
-                        Nama Dokter
-                      </label>
-                      <input
-                        value={dataById.nama_dokter}
-                        class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        type="number"
-                        readOnly
-                      />
-                    </div>
-                  </div>
-                  <div class="w-full  px-4 mb-4 md:mb-0">
-                    <div className="field">
-                      <label className="block text-gray-700 text-sm text-left font-bold mb-1">
-                        Frekuensi Pemberian
-                      </label>
-                      <input
-                        class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        value={dataById.frekuensi}
-                        type="text"
-                        readOnly
-                      />
-                    </div>
-                    <div className="field">
-                      <label className="block text-gray-700 text-sm text-left font-bold mb-1">
-                        Durasi Obat
-                      </label>
-                      <input
-                        class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        value={dataById.durasi_obat}
-                        type="text"
-                        readOnly
-                      />
-                    </div>
-                    <div className="field">
-                      <label className="block text-gray-700 text-sm text-left font-bold mb-1">
-                        Tanggal Resep
-                      </label>
-                      <input
-                        class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        value={dataById.tanggal_resep}
-                        type="date"
-                        readOnly
-                      />
-                    </div>
-                    <div className="field">
-                      <label className="block text-gray-700 text-sm text-left font-bold mb-1">
-                        Instruksi Penggunaan
-                      </label>
-                      <textarea
-                        class="w-full px-4 text-sm py-2 text-gray-700 border rounded-lg focus:outline-none focus:border-blue-500 resize-none"
-                        rows="3"
-                        readOnly
-                        value={dataById.instruksi_penggunaan}
-                      ></textarea>
+                    <div class="w-full bg-white  px-4 mb-4 md:mb-0">
+                      <table className="table-auto border-collapse ">
+                        <tbody className="text-left">
+                          <tr>
+                            <td>Instruksi Penggunaan</td>
+                            <td className="px-2">:</td>
+                            <td>{dataById?.instruksi_penggunaan}</td>
+                          </tr>
+                          <tr>
+                            <td>Tanggal Resep</td>
+                            <td className="px-2">:</td>
+                            <td>{dataById?.tanggal_resep}</td>
+                          </tr>
+                          <tr>
+                            <td>Nama Dokter</td>
+                            <td className="px-2">:</td>
+                            <td>{dataById?.dokter?.nama_dokter}</td>
+                          </tr>
+                          <tr>
+                            <td>Nama Pasien</td>
+                            <td className="px-2">:</td>
+                            <td>{dataById?.pasien_rm?.nama_lengkap}</td>
+                          </tr>
+                        </tbody>
+                      </table>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </Modal>
+            </Modal>
+          )}
         </div>
       </div>
     </div>
