@@ -1,18 +1,13 @@
 import React, { useState, useEffect } from "react";
 import Sidebar from "../../templates/sidebar";
 import Header from "../../templates/header";
-import { useNavigate } from "react-router-dom";
 import Modal from "../../../component/Modal";
-import { API_URL } from "../../../config";
+
 import axios from "axios";
 import MenuFarmasi from "../component/MenuFarmasi";
-
+import SelectWithSearch from "../component/SelectWithSearch";
+import { API_URL } from "../../../config";
 const Resep = () => {
-  const navigate = useNavigate();
-  const handleBack = () => {
-    navigate(-1);
-  };
-
   // pagination
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
@@ -81,11 +76,16 @@ const Resep = () => {
   }, [searchQueryResepObat, page, resepObat, limit]);
 
   // show select nama obat dari database obat
-  const [namaObat, setNamaObat] = useState();
+  const [options, setOptions] = useState();
   const fetchNamaObat = async () => {
     try {
       const response = await axios.get(`${API_URL}/farmasi/obat/nama`);
-      setNamaObat(response.data);
+      const dataOption = response.data.map((item) => ({
+        value: item.id,
+        label: item.nama_obat,
+      }));
+
+      setOptions(dataOption);
     } catch (error) {
       console.log(error);
     }
@@ -93,7 +93,7 @@ const Resep = () => {
 
   useEffect(() => {
     fetchNamaObat();
-  }, [namaObat]);
+  }, [options]);
 
   const handleCloseModal = () => {
     setIsDeleteOpen(false);
@@ -532,12 +532,7 @@ const Resep = () => {
                         <label className="block text-gray-700 text-sm text-left font-bold mb-1">
                           Nama Obat
                         </label>
-                        <input
-                          class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                          name="id_obat"
-                          type="number"
-                          onChange={handleFormResepObatChange}
-                        />
+                        <SelectWithSearch options={options} />
                       </div>
                       <div className="field">
                         <label className="block text-gray-700 text-sm text-left font-bold mb-1">
