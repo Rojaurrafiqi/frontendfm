@@ -1,3 +1,17 @@
+           
+// farmasi > penjualan obat
+router.get("/farmasi/penjualan/obat", getPenjualanObat);
+
+// farmasi > post penjualan obat
+router.post("/farmasi/obat/penjualan/", postPenjualanObat);
+
+// farmasi > edit penjualan obat
+router.patch("/farmasi/obat/penjualan/:id", updatePenjualanObat);
+
+// farmasi > delete penjualan obat
+router.delete("/farmasi/obat/penjualan/:id", deletePenjualanObat);
+           
+           
               <div className="flex justify-end mb-4">
                 <Link to={"/farmasi/obat/data"}>
                   <button

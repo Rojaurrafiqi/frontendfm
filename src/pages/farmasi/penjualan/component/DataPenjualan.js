@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { API_URL } from "../../../../config";
+import Modal from "../../../../component/Modal";
 
 const DataPenjualan = () => {
   // pagination
@@ -114,7 +115,7 @@ const DataPenjualan = () => {
 
   const handleDeletePenjualanObat = async (PasienId) => {
     try {
-      await axios.delete(`${API_URL}/farmasi/obat/resep/${PasienId}`);
+      await axios.delete(`${API_URL}/farmasi/obat/penjualan/${PasienId}`);
     } catch (error) {
       console.error(error);
       alert("Failed to delete data.");
@@ -277,8 +278,144 @@ const DataPenjualan = () => {
         <div className="container bg-emerald300 text-left pl-2 mt-3 py-0.5">
           Data Penjualan
         </div>
-        <div className="overflow-y-auto max-h-[48vh]"></div>
+        <div className="overflow-y-auto max-h-[48vh]">
+          <table class="table-auto w-full">
+            <thead className="sticky top-0 ">
+              <tr>
+                <th class=" py-3 px-6 bg-gray-50  text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  No
+                </th>
+                <th class=" py-3 px-6 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Nama Obat
+                </th>
+                <th class=" py-3 px-6 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Quantity
+                </th>
+                <th class=" py-3 px-6 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Harga
+                </th>
+                <th class=" py-3 px-6 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Diskon
+                </th>
+                <th class=" py-3 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Total
+                </th>
+                <th class=" py-3 px-6 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Date
+                </th>
+                <th class=" py-3 px-6 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Metode
+                </th>
+                <th class=" py-3 px-6 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Status
+                </th>
+                <th class=" py-3 px-6 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Aksi
+                </th>
+                <th class=" py-3 px-6 bg-gray-50 text-left text-xs fonst-medium text-gray-500 uppercase tracking-wider"></th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y  divide-gray-200 ">
+              {dataPenjualanObat.length > 0 ? (
+                dataPenjualanObat.map((item, index) => (
+                  <tr key={item.id}>
+                    <td className="py-0.3  px-6 whitespace-nowrap">
+                      {index + 1}
+                    </td>
+                    <td className="py-0.3  px-6 whitespace-nowrap">
+                      {item.obat_data?.nama_obat}
+                    </td>
+                    <td className="py-0.3  px-6 whitespace-nowrap">
+                      {item.jumlah}
+                    </td>
+                    <td className="py-0.3  px-6 whitespace-nowrap">
+                      {item.harga_satuan}
+                    </td>
+                    <td className="py-0.3  px-6 whitespace-nowrap">
+                      {item.diskon}
+                    </td>
+                    <td className="py-0.3  px-6 whitespace-nowrap">
+                      {item.total_harga}
+                    </td>
+                    <td className="py-0.3  px-6 whitespace-nowrap">
+                      {item.tanggal_penjualan}
+                    </td>
+                    <td className="py-0.3  px-6 whitespace-nowrap">
+                      {item.metode_pembayaran}
+                    </td>
+                    <td className="py-0.3  px-6 whitespace-nowrap">
+                      {item.informasi_pembayaran}
+                    </td>
+
+                    <td class=" py-0.3  whitespace-nowrap text-right">
+                      <button
+                        onClick={() => handleDetailPenjualanObat(item.id)}
+                        className="ml-1 py-0.1 px-1 mr-1 my-0.2 bg-emerald text-white  hover:opacity-75"
+                        type="button"
+                      >
+                        Detail
+                      </button>
+                      <button
+                        onClick={() => handleEditPenjualanObat(item.id)}
+                        className="ml-1 py-0.1 px-1 mr-1 my-0.2 bg-emerald text-white  hover:opacity-75"
+                        type="button"
+                      >
+                        Edit
+                      </button>
+
+                      <button
+                        onClick={() => handleShowModalDelete(item.id)}
+                        className="ml-1 py-0.1 px-1 mr-1 my-0.2 bg-red-600 text-white  hover:opacity-75"
+                        type="button"
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colspan="11" className="bg-gray-200 w-full">
+                    {searchQueryPenjualanObat
+                      ? "No results found"
+                      : "Data tidak tersedia"}
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
+      {/* modal delete resep obat */}
+      <Modal isOpen={isDeleteOpen} onClose={handleCloseModal}>
+        <div class="bg-white rounded-lg w-1/3 mt-10 overflow-hidden shadow-xl transform transition-all max-w-screen-lg ">
+          <div class="bg-gray-50 p-6">
+            <div class="flex flex-col md:flex-row">
+              <div class="w-full">
+                <h2 class="text-xl font-bold py-4 ">Are you sure?</h2>
+                <p class="text-sm text-gray-500 px-8">
+                  Do you really want to delete this data? This process cannot be
+                  undone
+                </p>
+                <div className="mt-4">
+                  <button
+                    onClick={handleConfirmDelete}
+                    class="px-4 py-2 mr-2 bg-red-800 text-white rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:ring-opacity-50"
+                  >
+                    Yes
+                  </button>
+                  <button
+                    onClick={() => setIsDeleteOpen(false)}
+                    class="px-4 py-2 ml-2 bg-gray-100 text-state-700 border border-black rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:ring-opacity-50 mr-2"
+                  >
+                    No
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };
