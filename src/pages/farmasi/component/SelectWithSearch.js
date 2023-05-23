@@ -10,8 +10,9 @@ const SelectWithSearch = ({ options }) => {
     setSearchTerm(e.target.value);
   };
 
-  const handleOptionClick = (option) => {
-    setSelectedOption(option);
+  const handleOptionClick = (value) => {
+    console.log(value);
+    setSelectedOption(value);
     setShowOptions(false);
     setSearchTerm("");
   };
@@ -44,20 +45,22 @@ const SelectWithSearch = ({ options }) => {
         onClick={() => setShowOptions(true)}
         ref={inputRef}
       />
-
       {showOptions && (
         <ul className="absolute left-0 mt-2 w-full bg-white rounded-md max-h-40 overflow-y-auto shadow">
           {filteredOptions.map((option) => (
             <li
-              className="text-left px-4  cursor-pointer hover:bg-gray-200"
+              className="text-left px-4  cursor-pointer hover:bg-gray-500"
               key={option.value}
-              onClick={() => handleOptionClick(option)}
+              value={option.value}
+              onClick={() => handleOptionClick("koko")}
             >
               {option.label}
             </li>
           ))}
         </ul>
       )}
+
+      {selectedOption}
     </div>
   );
 };

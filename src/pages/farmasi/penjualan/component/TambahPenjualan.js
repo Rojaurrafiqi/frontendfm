@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { API_URL } from "../../../../config";
 
@@ -54,12 +54,15 @@ const TambahPenjualan = () => {
         `${API_URL}/farmasi/obat/penjualan`,
         data
       );
+
+      console.log(sendData);
     } catch (error) {
       console.log(error);
     }
   };
 
   const [totalSum, setTotalSum] = useState();
+
   const handleFormPenjualanChange = (index, event) => {
     let data = [...rowData];
     data[index][event.target.name] = event.target.value;
@@ -82,6 +85,7 @@ const TambahPenjualan = () => {
     );
     setTotalSum(sum);
   };
+
   const getCurrentDate = () => {
     const currentDate = new Date();
     const year = currentDate.getFullYear();
@@ -98,10 +102,57 @@ const TambahPenjualan = () => {
 
     return `${year}-${month}-${day}`;
   };
+
   const [selectedDate, setSelectedDate] = useState(getCurrentDate());
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("cash");
   const [selectedStatusPembayaran, setSelectedStatusPembayaran] =
     useState("lunas");
+
+  // sampai disini kolom search
+
+  const [options, setOptions] = useState([]);
+  const [query, setQuery] = useState("");
+  const [namaObatList, setNamaObatList] = useState([]);
+
+  const fetchNamaObatByStok = async () => {
+    try {
+      const response = await axios.get(
+        `${API_URL}/farmasi/obat/nama/stok?search=${query}`
+      );
+      setOptions(response.data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchNamaObatByStok();
+  }, [query, options]);
+
+  const handleQueryObat = (index, event) => {
+    const query = event.target.value;
+    setQuery(query);
+  };
+
+  const handleObatSelect = (index, obatId, obatNama, harga) => {
+    setRowData((prevData) => {
+      const data = [...prevData];
+      data[index].id_obat = obatId;
+      data[index].nama_obat = obatNama;
+      data[index].harga_satuan = harga;
+      data[index].jumlah = "";
+      return data;
+    });
+    setNamaObatList(false);
+    setQuery("");
+  };
+  useEffect(() => {
+    setNamaObatList(rowData.map(() => false));
+  }, [rowData]);
+
+  // console.log(options);
+
+  // sampai disini kolom search
 
   return (
     <div>
@@ -113,7 +164,7 @@ const TambahPenjualan = () => {
       </div>
       <form onSubmit={handleSubmit}>
         <div className="overflow-y-auto max-h-[48vh]">
-          <table class="table-auto w-full">
+          <table class="table-auto w-full mb-20">
             <thead className="sticky top-0 ">
               <tr>
                 <th class=" py-3 px-6 bg-gray-50  text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -146,15 +197,60 @@ const TambahPenjualan = () => {
                   <td className="py-0.3  px-6 whitespace-nowrap">
                     {index + 1}
                   </td>
-                  <input
-                    className="hover:border text-center hover:border-gray-300 text-sm w-full px-1"
-                    name="id_obat"
-                    type="text"
-                    value={input.id_obat}
-                    onChange={(event) =>
-                      handleFormPenjualanChange(index, event)
-                    }
-                  />
+
+                  <td>
+                    <td>
+                      <input
+                        className="border text-center border-gray-300 mx-4"
+                        readOnly
+                        name="id_obat"
+                        value={input.nama_obat}
+                        onClick={() => {
+                          setNamaObatList((prevState) => {
+                            const updatedState = [...prevState];
+                            updatedState[index] = !updatedState[index];
+                            return updatedState;
+                          });
+                        }}
+                      />
+                      {namaObatList[index] && (
+                        <div className="relative">
+                          <input
+                            onChange={(event) => handleQueryObat(index, event)}
+                            className="border border-black"
+                            placeholder="search"
+                          />
+                          {namaObatList[index] && options.length > 0 && (
+                            <div className="absolute left-0 mt-2 w-full">
+                              <ul className="bg-white border border-gray-300 rounded-md shadow-md">
+                                {options.map((item) => (
+                                  <li
+                                    className="px-2 hover:bg-gray-100"
+                                    key={item.id}
+                                  >
+                                    <a
+                                      href="#"
+                                      value={item.obat_data?.id}
+                                      onClick={() =>
+                                        handleObatSelect(
+                                          index,
+                                          item.obat_data?.id,
+                                          item.obat_data?.nama_obat,
+                                          item.harga_jual
+                                        )
+                                      }
+                                    >
+                                      {item.obat_data?.nama_obat}
+                                    </a>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </td>
+                  </td>
                   <td className="py-0.3  px-6 whitespace-nowrap">
                     <input
                       class="hover:border text-center hover:border-gray-300  text-sm w-full px-1 "
@@ -171,6 +267,7 @@ const TambahPenjualan = () => {
                       class="hover:border text-center hover:border-gray-300  text-sm w-full px-1 "
                       name="harga_satuan"
                       type="text"
+                      readOnly
                       value={input.harga_satuan}
                       onChange={(event) =>
                         handleFormPenjualanChange(index, event)
