@@ -199,9 +199,9 @@ const TambahPenjualan = () => {
                   </td>
 
                   <td>
-                    <td>
+                    <div className="relative">
                       <input
-                        className="border text-center border-gray-300 mx-4"
+                        className="border text-center border-gray-300 px-5"
                         readOnly
                         name="id_obat"
                         value={input.nama_obat}
@@ -214,43 +214,46 @@ const TambahPenjualan = () => {
                         }}
                       />
                       {namaObatList[index] && (
-                        <div className="relative">
-                          <input
-                            onChange={(event) => handleQueryObat(index, event)}
-                            className="border border-black"
-                            placeholder="search"
-                          />
-                          {namaObatList[index] && options.length > 0 && (
-                            <div className="absolute left-0 mt-2 w-full">
-                              <ul className="bg-white border border-gray-300 rounded-md shadow-md">
-                                {options.map((item) => (
-                                  <li
-                                    className="px-2 hover:bg-gray-100"
-                                    key={item.id}
-                                  >
-                                    <a
-                                      href="#"
-                                      value={item.obat_data?.id}
-                                      onClick={() =>
-                                        handleObatSelect(
-                                          index,
-                                          item.obat_data?.id,
-                                          item.obat_data?.nama_obat,
-                                          item.harga_jual
-                                        )
-                                      }
-                                    >
-                                      {item.obat_data?.nama_obat}
-                                    </a>
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-                          )}
-                        </div>
+                        <ul className="absolute py-1 left-0 text-sm px-4 bg-white border border-gray-400 max-h-40 overflow-y-auto shadow">
+                          <li className="pt-2 px-1 ">
+                            <input
+                              onChange={(event) =>
+                                handleQueryObat(index, event)
+                              }
+                              className="border border-gray-400 px-2"
+                              autoFocus
+                              placeholder="search"
+                            />
+                          </li>
+                          {namaObatList[index] &&
+                            options.length > 0 &&
+                            options.map((item) => (
+                              <li
+                                className="px-2  hover:bg-gray-100"
+                                key={item.id}
+                              >
+                                <a
+                                  href="#"
+                                  className="px-10"
+                                  value={item.obat_data?.id}
+                                  onClick={() =>
+                                    handleObatSelect(
+                                      index,
+                                      item.obat_data?.id,
+                                      item.obat_data?.nama_obat,
+                                      item.harga_jual
+                                    )
+                                  }
+                                >
+                                  {item.obat_data?.nama_obat}
+                                </a>
+                              </li>
+                            ))}
+                        </ul>
                       )}
-                    </td>
+                    </div>
                   </td>
+
                   <td className="py-0.3  px-6 whitespace-nowrap">
                     <input
                       class="hover:border text-center hover:border-gray-300  text-sm w-full px-1 "
