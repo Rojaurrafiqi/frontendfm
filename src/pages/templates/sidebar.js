@@ -7,6 +7,7 @@ import ralanLogo from "../../images/ralan.png";
 import igdLogo from "../../images/igd.png";
 import menuLogo from "../../images/menu.png";
 import apotekLogo from "../../images/apotek.png";
+import addUserLogo from "../../images/adduser.png";
 import { Link } from "react-router-dom";
 
 const Sidebar = () => {
@@ -53,6 +54,12 @@ const Sidebar = () => {
             <Link to={"/form"} rel="noopener noreferrer" href="#">
               <img src={formLogo} width="38" className="mx-auto" />
               <p className="text-xs text-center">FORM</p>
+            </Link>
+          </div>
+          <div className="flex flex-col items-center justify-center">
+            <Link to={"/user"} rel="noopener noreferrer" href="#">
+              <img src={addUserLogo} width="35" className="mx-auto" />
+              <p className="text-xs text-center">USER</p>
             </Link>
           </div>
         </div>

@@ -1,13 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import Sidebar from "../templates/sidebar";
 import Header from "../templates/header";
-import { useNavigate } from "react-router-dom";
+import MenuRalan from "./component/MenuRalan";
+import DaftarPasien from "./pasien/DaftarPasien";
 
 const Ralan = () => {
-  const navigate = useNavigate();
-  const handleBack = () => {
-    navigate(-1);
-  };
   return (
     <div class="h-full">
       <div class="flex">
@@ -16,14 +13,9 @@ const Ralan = () => {
         </div>
         <div class="flex-auto bg-dasar border-l-2 border-opacity-30 border-gray-300 shadow-md">
           <Header />
-          <div className="flex justify-between my-3 mx-4">
-            <button
-              className="py-0.2 px-1 mr-1 bg-emerald text-white  hover:opacity-75"
-              type="button"
-              onClick={handleBack}
-            >
-              KEMBALI
-            </button>
+          <div class="container mx-auto 2xl:w-screen pb-10">
+            <MenuRalan />
+            <DaftarPasien />
           </div>
         </div>
       </div>

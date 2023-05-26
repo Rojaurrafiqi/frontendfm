@@ -17,6 +17,7 @@ import Gudang from "./pages/farmasi/gudang/gudang";
 import ReportFarmasi from "./pages/farmasi/report/report";
 import DataObat from "./pages/farmasi/gudang/DataObat";
 import StokObat from "./pages/farmasi/gudang/StokObat";
+import User from "./pages/user/user";
 
 function App() {
   return (
@@ -49,6 +50,9 @@ function App() {
           <Route path="/farmasi/obat/data" element={<DataObat />} />
           <Route path="/farmasi/obat/stok" element={<StokObat />} />
           <Route path="/farmasi/report" element={<ReportFarmasi />} />
+
+          {/* user */}
+          <Route path="/user" element={<User />} />
         </Routes>
       </div>
     </BrowserRouter>
