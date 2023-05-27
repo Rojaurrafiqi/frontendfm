@@ -56,12 +56,12 @@ const Sidebar = () => {
               <p className="text-xs text-center">FORM</p>
             </Link>
           </div>
-          <div className="flex flex-col items-center justify-center">
-            <Link to={"/user"} rel="noopener noreferrer" href="#">
-              <img src={addUserLogo} width="35" className="mx-auto" />
-              <p className="text-xs text-center">USER</p>
-            </Link>
-          </div>
+        </div>
+        <div className="flex flex-col items-center justify-center">
+          <Link to={"/user"} rel="noopener noreferrer" href="#">
+            <img src={addUserLogo} width="35" className="mx-auto" />
+            <p className="text-xs text-center">USER</p>
+          </Link>
         </div>
       </div>
     </>

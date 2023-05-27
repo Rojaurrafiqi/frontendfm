@@ -1,0 +1,14 @@
+GET http://localhost:5000/users/all?jabatan=perawat&status=tidak aktif
+
+###
+POST http://localhost:5000/users
+Content-Type: application/json
+
+{
+    "name": "Maya Pratiwi",
+    "email": "mayapratiwi@example.com",
+    "password": "12345678",
+    "confPassword": "12345678",
+    "jabatan":"dokter",
+    "status":"aktif"
+}

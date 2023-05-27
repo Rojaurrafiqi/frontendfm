@@ -1,7 +1,37 @@
-import React from "react";
+import React, { useState } from "react";
 import filemedisLogo from "../../images/logo-filemedis.png";
+import minimize from "../../images/minimize.png";
+import maximize from "../../images/maximize.png";
 
-const header = () => {
+const Header = () => {
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  const handleFullscreen = () => {
+    const element = document.documentElement;
+    if (!isFullscreen) {
+      if (element.requestFullscreen) {
+        element.requestFullscreen();
+      } else if (element.mozRequestFullScreen) {
+        element.mozRequestFullScreen();
+      } else if (element.webkitRequestFullscreen) {
+        element.webkitRequestFullscreen();
+      } else if (element.msRequestFullscreen) {
+        element.msRequestFullscreen();
+      }
+      setIsFullscreen(true);
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.mozCancelFullScreen) {
+        document.mozCancelFullScreen();
+      } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+      } else if (document.msExitFullscreen) {
+        document.msExitFullscreen();
+      }
+      setIsFullscreen(false);
+    }
+  };
   return (
     <div>
       <nav class="bg-white  border-b-2 ">
@@ -15,6 +45,23 @@ const header = () => {
             {/* <!-- Navigation links --> */}
             <div class="hidden md:block">
               <ul class="flex space-x-4">
+                <li>
+                  {isFullscreen ? (
+                    <img
+                      src={minimize}
+                      className="cursor-pointer"
+                      onClick={handleFullscreen}
+                      width="30px"
+                    />
+                  ) : (
+                    <img
+                      className="cursor-pointer"
+                      src={maximize}
+                      onClick={handleFullscreen}
+                      width="22px"
+                    />
+                  )}
+                </li>
                 <li>
                   <a href="#" class="text-gray-600 hover:text-emerald">
                     About Us
@@ -107,4 +154,4 @@ const header = () => {
   );
 };
 
-export default header;
+export default Header;

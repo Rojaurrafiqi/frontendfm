@@ -7,6 +7,8 @@ import axios from "axios";
 import MenuFarmasi from "../component/MenuFarmasi";
 import SelectWithSearch from "../component/SelectWithSearch";
 import { API_URL } from "../../../config";
+import Select from "react-select";
+
 const Resep = () => {
   // pagination
   const [page, setPage] = useState(1);
@@ -146,7 +148,7 @@ const Resep = () => {
       const dataNewObat = {
         ...formResepObat,
         status_resep: "antrian",
-        id_obat: 4,
+        id_obat: Number(idNamaObat),
         id_pasien_rm: 4,
         id_dokter: 1,
       };
@@ -213,6 +215,11 @@ const Resep = () => {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const [idNamaObat, setIdNamaObat] = useState(null);
+  const handleNamaObat = (e) => {
+    setIdNamaObat(e.value);
   };
 
   return (
@@ -532,7 +539,13 @@ const Resep = () => {
                         <label className="block text-gray-700 text-sm text-left font-bold mb-1">
                           Nama Obat
                         </label>
-                        <SelectWithSearch options={options} />
+                        {/* <SelectWithSearch options={options} /> */}
+                        <Select
+                          options={options}
+                          className="text-left text-sm py-1"
+                          name="id_obat"
+                          onChange={(event) => handleNamaObat(event)}
+                        />
                       </div>
                       <div className="field">
                         <label className="block text-gray-700 text-sm text-left font-bold mb-1">

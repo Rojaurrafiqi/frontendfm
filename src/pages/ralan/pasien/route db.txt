@@ -1,0 +1,9 @@
+post ralan/pasien/daftar
+ 
+GET http://localhost:5000/ralan/pasien/all
+
+###
+GET http://localhost:5000/ralan/pasien/2
+
+###
+DELETE  http://localhost:5000/ralan/pasien/2
