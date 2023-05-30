@@ -47,7 +47,7 @@ const User = () => {
   // select form jabatan adalah jabatan yang dipilih pada select form jabatan
   const [selectFormJabatan, setSelectFormJabatan] = useState();
 
-  const [isRegisterUser, setIsRegisterUser] = useState(true);
+  const [isRegisterUser, setIsRegisterUser] = useState(false);
 
   //all users
   useEffect(() => {
@@ -354,12 +354,14 @@ const User = () => {
                             </td>
 
                             <td class=" py-0.3 whitespace-nowrap">
-                              <button
-                                className="ml-1 py-0.1 px-1 mr-1 my-0.2 bg-emerald text-white  hover:opacity-75"
-                                type="button"
-                              >
-                                Tangani
-                              </button>
+                              <Link to={`/user/detail/${item.id}`}>
+                                <button
+                                  className="ml-1 py-0.1 px-1 mr-1 my-0.2 bg-emerald text-white  hover:opacity-75"
+                                  type="button"
+                                >
+                                  Tangani
+                                </button>
+                              </Link>
 
                               <button
                                 onClick={() => handleShowModalDelete(item.id)}

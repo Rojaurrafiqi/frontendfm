@@ -18,7 +18,7 @@ const MenuRalan = () => {
         KEMBALI
       </button>
       <div className="flex">
-        <Link to={"/farmasi/penjualan"}>
+        <Link to={"/ralan"}>
           <button
             className="py-0.2 px-1 mr-1 bg-emerald text-white  hover:opacity-75"
             type="button"
@@ -26,22 +26,30 @@ const MenuRalan = () => {
             PASIEN
           </button>
         </Link>
-        <Link to={"/farmasi/resep"}>
+        <Link to={"/ralan/poli/jadwal"}>
           <button
             className="py-0.2 px-1 mr-1 bg-emerald text-white  hover:opacity-75"
             type="button"
           >
-            POLI
+            JADWAL
           </button>
         </Link>
-        <Link to={"/farmasi/obat/stok"}>
-          <button
-            className="py-0.2 px-1 mr-1 bg-emerald text-white  hover:opacity-75"
-            type="button"
-          >
-            REPORT
-          </button>
-        </Link>
+        {/* <Link to={"/farmasi/resep"}> */}
+        <button
+          className="py-0.2 px-1 mr-1 bg-emerald text-white  hover:opacity-75"
+          type="button"
+        >
+          POLI
+        </button>
+        {/* </Link> */}
+        {/* <Link to={"/farmasi/obat/stok"}> */}
+        <button
+          className="py-0.2 px-1 mr-1 bg-emerald text-white  hover:opacity-75"
+          type="button"
+        >
+          REPORT
+        </button>
+        {/* </Link> */}
       </div>
     </div>
   );

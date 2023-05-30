@@ -466,7 +466,7 @@ const Resep = () => {
                         ))
                       ) : (
                         <tr>
-                          <td colspan="7" className="bg-gray-200 w-full">
+                          <td colspan="10" className="bg-gray-200 w-full">
                             {searchQueryResepObat
                               ? "No results found"
                               : "Data tidak tersedia"}
